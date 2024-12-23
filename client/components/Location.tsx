@@ -14,7 +14,7 @@ const CityTracker: React.FC = () => {
 
   const fetchCityFromCoordinates = async (latitude: number, longitude: number) => {
     try {
-      const apiKey = "2c9a75084fec417eb6d77b43dca17aac"; // Replace with your API key
+      const apiKey = "2c9a75084fec417eb6d77b43dca17aac";
       const response = await axios.get(
         `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apiKey}`
       );
