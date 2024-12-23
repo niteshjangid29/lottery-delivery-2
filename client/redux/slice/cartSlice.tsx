@@ -6,7 +6,7 @@ interface Ticket {
 }
 
 interface CartItem {
-  id: number;
+  id: string;
   lotteryName: string;
   drawDate: string;
   price: number;
@@ -48,7 +48,7 @@ const cartSlice = createSlice({
     },
     updateCart: (
       state,
-      action: PayloadAction<{ lotteryId: number; updatedTickets: Ticket[] }>
+      action: PayloadAction<{ lotteryId: string; updatedTickets: Ticket[] }>
     ) => {
       const { lotteryId, updatedTickets } = action.payload;
       const lottery = state.items.find((item) => item.id === lotteryId);

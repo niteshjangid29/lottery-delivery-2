@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 
-// Dummy data for 3 bestsellers
-const bestSellers = [
+// Dummy data for 3 parterBrands
+const parterBrands = [
   {
     name: "Rajshree",
     description: "A bestselling product that everyone is talking about.",
@@ -25,7 +25,7 @@ const BestsellerCard = () => {
     <div className="flex justify-center items-center pt-10">
       <div className="w-full max-w-5xl bg-white border-3 border-yellow-500 rounded-lg  p-4">
         <div className="flex justify-between space-x-2 mb-4">
-          {bestSellers.map((product, index) => (
+          {parterBrands.map((product, index) => (
             <div
               key={index}
               className="w-1/3 bg-white rounded-lg shadow-md p-2 relative border-2 border-dashed border-yellow-400"

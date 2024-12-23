@@ -1,18 +1,22 @@
 "use client";
 import React, { useState,useEffect,useRef } from "react";
 import { useRouter } from "next/navigation";
-import { lotteryTickets, LotteryTicket } from "../../utils/data/lotteryData";
+import {LotteryState,Lottery } from "../../utils/data/lotteryData";
 import Slider from "@mui/material/Slider";
 import { FaFilter } from "react-icons/fa";
+import { RootState } from "../../redux/store";
+import { useSelector } from "react-redux";
 const LotteryTicketCard = () => {
   const router = useRouter();
-  const [tickets, setTickets] = useState<LotteryTicket[]>(lotteryTickets);
-  const [sliderValue, setSliderValue] = useState<number>(Math.max(...lotteryTickets.map((ticket) => Number(ticket.prize))));
+  const lotteryState = useSelector((state: RootState) => state.lotteries) as LotteryState;
+  const lottery = Object.values(lotteryState.alllotteries)
+  const [tickets, setTickets] = useState<Lottery[]>(lottery);
+  const [sliderValue, setSliderValue] = useState<number>(Math.max(...lottery.map((ticket) => Number(ticket.prize))));
   const [showSlider, setShowSlider] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
 
-  const handleBuy = (id: number) => {
+  const handleBuy = (id: string) => {
     router.push(`/lottery/${id}`);
   };
 
@@ -58,8 +62,8 @@ const LotteryTicketCard = () => {
               <p className="text-gray-700 font-thin  text-xs">Filter by Price: ₹{sliderValue}</p>
               <Slider
                 value={sliderValue}
-                min={Math.min(...lotteryTickets.map((ticket) => Number(ticket.prize)))}
-                max={Math.max(...lotteryTickets.map((ticket) => Number(ticket.prize)))}
+                min={Math.min(...lottery.map((ticket) => Number(ticket.prize)))}
+                max={Math.max(...lottery.map((ticket) => Number(ticket.prize)))}
                 onChange={handleSliderChange}
                 valueLabelDisplay="auto"
               />
@@ -96,7 +100,7 @@ const LotteryTicketCard = () => {
                     </div>
                     <div className="text-center">
                       <button
-                        onClick={() => handleBuy(index + 1 + rowIndex * 3)}
+                        onClick={() => handleBuy(data._id)}
                         className="w-full bg-gradient-to-br from-blue-500 to-purple-600 hover:from-purple-600 hover:to-blue-500 text-white font-medium py-1 px-2 rounded-md shadow-lg transition-all duration-300 transform hover:scale-105 text-xs"
                       >
                         Buy Now

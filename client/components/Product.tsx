@@ -3,19 +3,34 @@ import React, { useState } from "react";
 import { useRouter,useParams } from "next/navigation";
 import { RootState } from '../redux/store';
 import { addToCart,updateCart } from "../redux/slice/cartSlice";
-import { lotteryTickets } from "../utils/data/lotteryData";
+// import { lotteryTickets } from "../utils/data/lotteryData";
 import { useSelector, useDispatch } from 'react-redux';
 
+type Lottery = {
+  _id: string;  
+  name: string;
+  drawDate: string;
+  prize: string;
+  winningAmount: string;
+  alltickets: Array<{ count: number; ticket: string[] | string[] }>;
+  soldTickets: Array<{ count: number; ticket: string[] | string[] }>;
+  availableTickets: Array<{ count: number; ticket: string[] | string[] }>;
+};
 
+type LotteryState = {
+  alllotteries: Record<string, Lottery>;
+};
 const LotteryTicket=() => {
   const {slug} = useParams();
   console.log(slug);
-  const currLottery=lotteryTickets.filter((lottery)=>(lottery.id)+""==slug);
+   const lotteryState = useSelector((state: RootState) => state.lotteries) as LotteryState;
+    const lotteryTickets = Object.values(lotteryState.alllotteries)
+  const currLottery=lotteryTickets.filter((lottery)=>(lottery._id)==slug);
   console.log(currLottery);
   const [ticketCount, setTicketCount] = useState<number>(currLottery[0].availableTickets[0].count);
   const data = useSelector((state: RootState) => state.cart);
   const lotteries = data.items;
-  const cartLottery = lotteries.find((lottery) => lottery.id === currLottery[0].id);
+  const cartLottery = lotteries.find((lottery) => lottery.id === (currLottery[0]._id));
   console.log(cartLottery?.tickets);
   const [selectedTickets, setSelectedTickets] = useState<{ ticket: string; count: number }[]>(cartLottery?.tickets ||[]);
   const router = useRouter();
@@ -51,13 +66,13 @@ const LotteryTicket=() => {
   const addToCartHandler = () => {
     if (cartLottery) {
     // Update existing lottery in the cart
-    dispatch(updateCart({ lotteryId: currLottery[0].id, updatedTickets: selectedTickets }));
+    dispatch(updateCart({ lotteryId: currLottery[0]._id, updatedTickets: selectedTickets }));
   }else {
     // Add new lottery to the cart
     console.log(currLottery[0])
     dispatch(
       addToCart({
-        id: currLottery[0].id,
+        id: currLottery[0]._id,
         lotteryName: currLottery[0].name,
         drawDate: currLottery[0].drawDate,
         price: Number(currLottery[0].prize),

@@ -7,7 +7,9 @@ const CenteredLayout = () => {
 
       <div className="bg-white w-full max-w-md mx-auto shadow-lg overflow-y-auto">
         <Header />
+        {/* <div className="position-relative fixed bottom-0" style={{width: "31.8%"}}> */}
         <Footer />
+        {/* </div> */}
       </div>
 
       <div className="bg-black flex-1"></div>

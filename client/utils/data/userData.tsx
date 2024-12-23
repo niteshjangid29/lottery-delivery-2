@@ -21,10 +21,10 @@ interface Ticket {
   }
   
   const dummyUserData: User = {
-    id: 1,  // User ID
+    id: 1, 
     name: "John Doe",
     mobileno: "+91 9876543210",
-    address: "123 Main Street, Mumbai, Maharashtra, 400001", // Single-line address
+    address: "123 Main Street, Mumbai, Maharashtra, 400001", 
     cart: [
       {
         id: 1,  // Lottery ID

@@ -1,11 +1,13 @@
 "use client";
-
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { lotteryTickets } from "../../utils/data/lotteryData";
-
+import { LotteryState } from "../../utils/data/lotteryData";
+import { RootState } from "../../redux/store";
+import { useSelector } from "react-redux";
 const LotteryTicketCard = () => {
   const [startIndex, setStartIndex] = useState(0);
+  const lotteryState = useSelector((state: RootState) => state.lotteries) as LotteryState;
+  const lotteryTickets = Object.values(lotteryState.alllotteries)
   const ticketsPerPage = 3;
   const router = useRouter();
 
@@ -21,7 +23,7 @@ const LotteryTicketCard = () => {
     }
   };
 
-  const handleBuy = (id: number) => {
+  const handleBuy = (id: string) => {
     console.log("Buy Now");
     router.push(`/lottery/${id}`);
   };
@@ -43,18 +45,19 @@ const LotteryTicketCard = () => {
           {/* Left Arrow */}
           {startIndex > 0 && (
             <button
-              className="p-3 bg-white rounded-full shadow-md hover:bg-gray-200 absolute left-3 transform -translate-x-full"
+              className="p-3 bg-white rounded-full shadow-md hover:bg-gray-200 absolute left-5 transform -translate-x-full"
               onClick={handlePrev}
             >
               ❮
             </button>
           )}
 
-          <div className="flex space-x-4 justify-center items-stretch w-full">
+          <div className="flex space-x-2 justify-center items-stretch w-full">
             {visibleTickets.map((data, index) => (
               <div
                 key={index + startIndex}
-                className="w-1/3 bg-white rounded-lg shadow-md p-2 border-2 border-dashed border-yellow-400 flex flex-col justify-between"
+                className="max-w-1/3 bg-white rounded-lg shadow-md p-1 border-2 border-dashed border-yellow-400 flex flex-col justify-between"
+                style={{ width: "125px"}}
               >
                 <div className="text-center text-sm font-bold text-gray-700 mb-1">
                   <h1 className="uppercase tracking-wide text-yellow-500">
@@ -74,7 +77,7 @@ const LotteryTicketCard = () => {
                 </div>
                 <div className="text-center">
                   <button
-                    onClick={() => handleBuy(index + startIndex + 1)}
+                    onClick={() => handleBuy(data._id)}
                     className="w-full bg-gradient-to-br from-blue-500 to-purple-600 hover:from-purple-600 hover:to-blue-500 text-white font-medium py-1 px-2 rounded-md shadow-lg transition-all duration-300 transform hover:scale-105 text-xs"
                   >
                     Buy Now
@@ -87,7 +90,7 @@ const LotteryTicketCard = () => {
           {/* Right Arrow */}
           {startIndex + ticketsPerPage < lotteryTickets.length && (
             <button
-              className="p-3 bg-white rounded-full shadow-md hover:bg-gray-200 absolute right-3 transform translate-x-full"
+              className="p-3 bg-white rounded-full shadow-md hover:bg-gray-200 absolute right-5 transform translate-x-full"
               onClick={handleNext}
             >
               ❯

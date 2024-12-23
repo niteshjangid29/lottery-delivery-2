@@ -1,37 +1,49 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { useDispatch} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCurrTab } from "../../redux/slice/currTabSlice";
-import { lotteryTickets } from "../../utils/data/lotteryData";
-
-const LotteryTicketCard = () => {
+import { RootState } from "../../redux/store";
+import { LotteryState } from "../../utils/data/lotteryData";
+const LotteryTicketCard: React.FC = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const tickets = (
-    lotteryTickets.slice(0, 6)
-  );
-  const handleBuy = (id:number) => {
-    console.log("Buy Now");
+  const lotteryState = useSelector((state: RootState) => state.lotteries) as LotteryState;
+  const lottery = Object.values(lotteryState.alllotteries).slice(0, 6);
+
+  const handleBuy = (id: string): void => {
+    console.log("Buy Now", id);
     router.push(`/lottery/${id}`);
-  }
-  const showAll = () => {
-    router.push("/lottery");
-    dispatch(setCurrTab("Lottery"))
   };
 
-  const rows = Math.ceil(tickets.length / 3);
+  const showAll = (): void => {
+    router.push("/lottery");
+    dispatch(setCurrTab("Lottery"));
+  };
 
-  return (
+  if (!lottery || lottery.length === 0) {
+    return (
+      <div className="flex justify-center items-center py-5">
+        <div className="text-center text-gray-500">No lotteries available at the moment.</div>
+      </div>
+    );
+  }
+
+  const rows = Math.ceil(lottery.length / 3);
+
+  return (<>
+       <h2 className="text-2xl font-bold text-center text-yellow-600 mt-6">
+          Categories
+        </h2>
     <div className="flex justify-center items-center py-5">
       <div className="w-full max-w-5xl bg-white border-3 border-yellow-500 rounded-lg px-4">
         {Array.from({ length: rows }).map((_, rowIndex) => (
           <div key={rowIndex} className="flex justify-between space-x-2 mb-4">
-            {tickets
+            {lottery
               .slice(rowIndex * 3, (rowIndex + 1) * 3)
-              .map((data, index) => (
+              .map((data) => (
                 <div
-                  key={index + rowIndex * 3}
+                  key={data._id}
                   className="w-1/3 bg-white rounded-lg shadow-md p-2 relative border-2 border-dashed border-yellow-400"
                 >
                   <div className="text-center text-sm font-bold text-gray-700 mb-1">
@@ -42,7 +54,7 @@ const LotteryTicketCard = () => {
                     </h1>
                   </div>
                   <div className="bg-gradient-to-r from-yellow-300 to-yellow-500 p-1 rounded-md shadow-inner mb-2 text-center">
-                    <span className="text-green-600">{data.winningAmount}</span>
+                    <span className="text-green-600">{data.winningAmount || "N/A"}</span>
                     <p className="text-[7px] font-semibold text-gray-800">
                       Draw Date: {data.drawDate}
                     </p>
@@ -51,7 +63,10 @@ const LotteryTicketCard = () => {
                     </p>
                   </div>
                   <div className="text-center">
-                    <button onClick={()=>handleBuy(index+1+(rowIndex*3))} className="w-full bg-gradient-to-br from-blue-500 to-purple-600 hover:from-purple-600 hover:to-blue-500 text-white font-medium py-1 px-2 rounded-md shadow-lg transition-all duration-300 transform hover:scale-105 text-xs">
+                    <button
+                      onClick={() => handleBuy(data._id)}
+                      className="w-full bg-gradient-to-br from-blue-500 to-purple-600 hover:from-purple-600 hover:to-blue-500 text-white font-medium py-1 px-2 rounded-md shadow-lg transition-all duration-300 transform hover:scale-105 text-xs"
+                    >
                       Buy Now
                     </button>
                   </div>
@@ -59,17 +74,17 @@ const LotteryTicketCard = () => {
               ))}
           </div>
         ))}
-          <div className="flex justify-center mt-4">
-            <button
-              onClick={showAll}
-              className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 transform hover:scale-105"
-            >
-              Show More
-            </button>
-          </div>
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={showAll}
+            className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 transform hover:scale-105"
+          >
+            Show All
+          </button>
+        </div>
       </div>
     </div>
-  );
+    </> );
 };
 
 export default LotteryTicketCard;

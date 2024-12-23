@@ -31,7 +31,7 @@ const orderSlice = createSlice({
   initialState,
   reducers: {
     placeOrder: (state, action: PayloadAction<Order>) => {
-      state.orderHistory.push(action.payload);
+      state.orderHistory.unshift(action.payload);
     },
   },
 });
