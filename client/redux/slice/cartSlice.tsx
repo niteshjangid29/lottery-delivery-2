@@ -57,8 +57,11 @@ const cartSlice = createSlice({
         lottery.tickets = updatedTickets;
       }
     },
+    setAllCart: (state, action: PayloadAction<CartItem[]>) => {
+      state.items = action.payload;
+    },
   },
 });
 
-export const { addToCart, removeTicket, updateCart,clearCart } = cartSlice.actions;
+export const { addToCart, removeTicket, updateCart,clearCart,setAllCart } = cartSlice.actions;
 export default cartSlice.reducer;

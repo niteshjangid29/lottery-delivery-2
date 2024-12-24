@@ -9,7 +9,7 @@ import { RootState } from "../redux/store";
 const Footer: React.FC = () => {
   const currTab = useSelector((state: RootState) => state.currTab.currTab);
   const dispatch = useDispatch();
-
+  const isLogin = useSelector((state: RootState) => state.user.isLogin)
   return (
     <footer
       className="bg-gray-100 py-2 flex justify-around border-t fixed bottom-0 w-full"
@@ -67,8 +67,8 @@ const Footer: React.FC = () => {
         className={`flex flex-col items-center ${
           currTab === "History" ? "text-blue-500" : "text-gray-500"
         }`}
-        href="/history"
-        onClick={() => dispatch(setCurrTab("History"))}
+        href={isLogin ? "/history":"login"}
+        onClick={() => {if(isLogin){dispatch(setCurrTab("History"))}}}
       >
         <span className="text-xl">
           <FaHistory />

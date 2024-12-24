@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import { useRouter,useParams } from "next/navigation";
 import { RootState } from '../redux/store';
 import { addToCart,updateCart } from "../redux/slice/cartSlice";
-// import { lotteryTickets } from "../utils/data/lotteryData";
+import axios from "axios";
 import { useSelector, useDispatch } from 'react-redux';
 import { MdCancel } from "react-icons/md";
-
+import { setUserCart } from "../redux/slice/userSlice";
+import { ToLink } from "../app/page";
 type Lottery = {
   _id: string;  
   name: string;
@@ -25,7 +26,9 @@ const LotteryTicket=() => {
   const {slug} = useParams();
   console.log(slug);
    const lotteryState = useSelector((state: RootState) => state.lotteries) as LotteryState;
-    const lotteryTickets = Object.values(lotteryState.alllotteries)
+  const isLogin = useSelector((state:RootState)=> state.user.isLogin)
+  const phone=useSelector((state:RootState)=> state.user.phoneNo);
+  const lotteryTickets = Object.values(lotteryState.alllotteries)
   const currLottery=lotteryTickets.filter((lottery)=>(lottery._id)==slug);
   console.log(currLottery);
   const [ticketCount, setTicketCount] = useState<number>(currLottery[0].availableTickets[0].count);
@@ -35,6 +38,7 @@ const LotteryTicket=() => {
   console.log(cartLottery?.tickets);
   const [selectedTickets, setSelectedTickets] = useState<{ ticket: string; count: number }[]>(cartLottery?.tickets ||[]);
   const router = useRouter();
+  const userCart = useSelector((state: RootState) => state.cart);
   const dispatch = useDispatch();
   const getTicketsByQuantity = (count: number) => {
     const data = currLottery[0].availableTickets.find((item) => item.count === count);
@@ -64,25 +68,57 @@ const LotteryTicket=() => {
     setSelectedTickets(updatedTickets);
   };
 
-  const addToCartHandler = () => {
+  const addToCartHandler = async() => {
+    if (!isLogin) {
+      router.push('/login');
+      return;
+    }
+  
+    let updatedCart;
+  
     if (cartLottery) {
-    dispatch(updateCart({ lotteryId: currLottery[0]._id, updatedTickets: selectedTickets }));
-  }else {
-    console.log(currLottery[0])
-    dispatch(
-      addToCart({
+      // Update the existing lottery's tickets
+      updatedCart = {
+        ...userCart,
+        items: userCart.items.map((item) =>
+          item.id === currLottery[0]._id
+            ? { ...item, tickets: selectedTickets }
+            : item
+        ),
+      };
+  
+      dispatch(updateCart({ lotteryId: currLottery[0]._id, updatedTickets: selectedTickets }));
+    } else {
+      // Add a new lottery to the cart
+      const newLottery = {
         id: currLottery[0]._id,
         lotteryName: currLottery[0].name,
         drawDate: currLottery[0].drawDate,
         price: Number(currLottery[0].prize),
         tickets: selectedTickets,
-      })
-    );
-  }
+      };
+  
+      updatedCart = {
+        ...userCart,
+        items: [...userCart.items, newLottery],
+      };
+  
+      dispatch(addToCart(newLottery));
+    }
+  
+    console.log(updatedCart);
+    try {
+      await axios.post(`${ToLink}/userCart`, {updatedCart,phone});
+    } catch (error:any) {
+      console.error("Error adding to cart:", error.message);
+    }
 
-  setSelectedTickets([]);
-  router.push("/cart");
-};
+    dispatch(setUserCart(updatedCart));
+  
+    setSelectedTickets([]);
+    router.push("/cart");
+  };
+  
 
   const initialRows = 5;
   const [visibleRows, setVisibleRows] = useState<number>(initialRows);

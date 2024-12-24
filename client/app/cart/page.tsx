@@ -6,10 +6,13 @@ import { MdDelete } from 'react-icons/md';
 import { FaArrowCircleLeft } from 'react-icons/fa';
 import Image from 'next/image';
 import noCart from '../../public/images/noCart.jpg';
-
+import axios from 'axios';
+import { ToLink } from '../page';
 const LotteryList: React.FC = () => {
   const dispatch = useDispatch();
   const data = useSelector((state: RootState) => state.cart);
+    const phone=useSelector((state:RootState)=> state.user.phoneNo);
+  
   const lotteries = data.items;
 
   const totalAmount = lotteries.reduce((total, lottery) => {
@@ -22,12 +25,28 @@ const LotteryList: React.FC = () => {
     );
   }, 0);
 
-  const handleDelete = (lotteryId: number, ticketId: number) => {
+  const handleDelete = async(lotteryId: number, ticketId: number) => {
     console.log(lotteryId, ticketId);
     dispatch({
       type: 'cart/removeTicket',
       payload: { lotteryId, ticketId },
     });
+    const updatedLotteries = lotteries.map((lottery, id) => {
+      if (id === lotteryId) {
+        return {
+          ...lottery,
+          tickets: lottery.tickets.filter((_, tId) => tId !== ticketId),
+        };
+      }
+      return lottery;
+    }).filter((lottery) => lottery.tickets.length > 0); 
+      console.log(updatedLotteries);
+      try {
+        await axios.post(`${ToLink}/userCart`, {updatedCart:{items:updatedLotteries},phone});
+      } catch (error:any) {
+        console.error("Error adding to cart:", error.message);
+      }
+      dispatch({ type: 'user/setUserCart', payload: updatedLotteries });
   };
 
   const handleOrder = () => {

@@ -13,6 +13,7 @@ export const getalllotteries = async () => {
       console.log(e);
     }
 };
+
 // export const getalltags = async () => {
 //   try {
 //     const response = await axios.get(`${ToLink}/getalltags`);

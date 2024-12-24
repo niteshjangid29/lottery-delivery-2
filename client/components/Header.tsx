@@ -5,16 +5,39 @@ import { CiSearch } from "react-icons/ci";
 import { FaUserAlt } from "react-icons/fa";
 import axios from "axios";
 import { ToLink } from "../app/page";
-import {store} from "../redux/store"
+import {RootState, store} from "../redux/store"
 import lotteriesreducer from "../redux/reducer/lotteryreducer";
 import {setSearchLotteries}  from "../redux/action/lotteryactions";
+import { useSelector,useDispatch } from "react-redux";
+// import { getallcart } from "../utils/API/settingcart"
+import {setUserPhone} from "../redux/slice/userSlice"
 const Header = () => {
+  const dispatch = useDispatch();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
+  // const phone = useSelector((state:RootState)=>state.user.phoneNo)
   const [search, setSearch] = useState("");
   const router = useRouter();
-
+  const isLogin=useSelector((state:RootState)=>state.user.isLogin)
+  const handleLogin=()=>{
+    if(!isLogin)
+    router.push("/login");
+    else{
+      dispatch(setUserPhone({
+        phoneNo: "",
+        isLogin:false
+    }))
+    }
+  }
+  const handleCart=()=>{
+    if(!isLogin){
+      router.push("/login");}
+    else{
+      // getallcart(phone);
+    router.push("/cart");
+    }
+  }
   const handleSearch = async () => {
     console.log(search);
     if (search.trim() === "") {
@@ -91,7 +114,7 @@ const Header = () => {
                 </li>
                 <li
                   className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => router.push("/cart")}
+                  onClick={handleCart}
                 >
                   My Cart
                 </li>
@@ -101,8 +124,8 @@ const Header = () => {
                 >
                   Contact Us
                 </li>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                  Logout
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogin}>
+                  {isLogin ? "Logout" : "Login"}
                 </li>
               </ul>
             </div>

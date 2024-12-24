@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import { FaEnvelope, FaWhatsapp, FaInstagram, FaLinkedin } from 'react-icons/fa';
-import Spinner from "../utils/spinner";
+// import Spinner from "../utils/spinner";
 import { submitContactUs } from '../utils/API/contactus';
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -105,7 +105,8 @@ const Contact: React.FC = () => {
             type="submit"
             className="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
-             {loading ? <Spinner /> : "Send message"}
+             {/* {loading ? <Spinner /> : "Send message"} */}
+             Send message
           </button>
         </form>
       </div>

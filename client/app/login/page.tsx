@@ -5,6 +5,7 @@ const CenteredLayout = () => {
       <div className="bg-black flex-1"></div>
 
       <div className="bg-white w-full max-w-md mx-auto shadow-lg overflow-y-auto">
+        
         <Login/>
       </div>
 
