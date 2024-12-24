@@ -20,18 +20,19 @@ exports.getalllottery = async (req, res) => {
   }
 };
 
-exports.searchBook = async (req, res) => {
+exports.searchLottery = async (req, res) => {
   const { search } = req.query;
   console.log(search);
   try {
-    const books = await Lotteryschema.find({
-      $text: { $search: search },
-      ispublished: true,
+    const lotteries = await Lotteryschema.find({
+      name: { $regex: search, $options: "i" },
+      // prizes: { $regex: search, $options: "i" },
+      // ispublished: true,
     });
-
+    console.log(lotteries);
     res.status(200).json({
       data: {
-        books,
+        lotteries,
       },
       message: "Books found by search term",
     });

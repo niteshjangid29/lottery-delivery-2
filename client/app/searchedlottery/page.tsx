@@ -1,6 +1,7 @@
 import Footer from "../../components/Footer";
-import Results from "../../components/Result";
 import Header from "../../components/Header";
+import SearchCard from "../../components/cards/Searchcard";
+
 const CenteredLayout = () => {
   return (
     <div className="h-screen flex bg-black">
@@ -8,8 +9,8 @@ const CenteredLayout = () => {
 
       <div className="bg-white w-full max-w-md mx-auto shadow-lg overflow-y-auto">
         <Header />
-        <Results />
-        {/* <div className="position-relative fixed bottom-0" style={{width: "440px"}}> */}
+        <SearchCard />
+        {/* <div className="position-relative fixed bottom-0" style={{width: "31.8%"}}> */}
         <Footer />
         {/* </div> */}
       </div>

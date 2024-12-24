@@ -1,6 +1,7 @@
 import * as lotteryaction from "../action/lotteryactions";
 const initialState = {
   alllotteries: [],
+  searchLotteries: [],
 };
 
 const lotteriesreducer = (state = initialState, action) => {
@@ -15,11 +16,11 @@ const lotteriesreducer = (state = initialState, action) => {
     //     ...state,
     //     alltags: action.alltags,
     //   };
-    // case lotteryaction.SET_SEARCH_BOOKS:
-    //   return {
-    //     ...state,
-    //     searchBooks: action.searchBooks,
-    //   };
+    case lotteryaction.SET_SEARCH_LOTTERIES:
+      return {
+        ...state,
+        searchLotteries: action.searchLotteries,
+      };
     // case lotteryaction.SET_FILTERED_BOOKS:
     //   return {
     //     ...state,

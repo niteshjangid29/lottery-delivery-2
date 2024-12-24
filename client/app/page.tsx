@@ -25,7 +25,7 @@ const CenteredLayout = () => {
         <BestsellerCard />
         <HomeCard />
         <HowToUse />
-        <Location />
+        {/* <Location /> */}
         {/* <div className="position-relative fixed bottom-0"> */}
         <Footer />
         {/* </div> */}

@@ -33,11 +33,13 @@ const OrderDetail: React.FC = () => {
         {order ? (
           <div className="flex-1 overflow-y-auto p-4">
             <div className="bg-white p-4 mb-4 rounded-md shadow-md">
-              <h2 className="text-lg font-semibold">Order #{Number(orderID) + 1}</h2>
-              <p className="text-sm text-gray-500">
-                Order Date: {new Date(order.orderDate).toLocaleDateString()}
-              </p>
-              <p className="text-green-600 font-bold">Total: ₹{order.totalAmount}</p>
+              <h2 className="text-lg font-semibold mb-1">Order #{Number(orderID) + 1}</h2>
+              <p className="text-sm text-gray-500 font-bold text-green-600 ">
+                  ₹{order.totalAmount} 
+                <span className="text-sm text-gray-500 ml-4">
+                  {new Date(order.orderDate).toLocaleDateString()}
+                </span>
+                </p>
             </div>
 
             {/* Lotteries in the Order */}
@@ -46,10 +48,14 @@ const OrderDetail: React.FC = () => {
                 key={lotteryIndex}
                 className="bg-gray-50 p-3 mb-4 rounded-md shadow-sm"
               >
-                <h3 className="text-md font-semibold">{lottery.lotteryName}</h3>
-                <p className="text-sm text-gray-500">
-                  Draw Date: {new Date(lottery.drawDate).toLocaleDateString()}
-                </p>
+                 <div className="flex justify-between items-center">
+                      <h3 className="text-md font-semibold">
+                        {lottery.lotteryName}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        Draw Date: {new Date(lottery.drawDate).toLocaleDateString()}
+                      </p>
+                    </div>
                 <p className="text-sm text-gray-500">Price: ₹{lottery.price}</p>
 
                 {/* Tickets */}
@@ -59,7 +65,10 @@ const OrderDetail: React.FC = () => {
                     className="flex items-center justify-between bg-white p-2 mb-1 rounded-md"
                   >
                     <p className="text-sm text-gray-700">
-                      Ticket Number: {ticket.ticket}
+                      Ticket No.: {ticket.ticket}
+                    </p>
+                    <p className="text-sm text-gray-700">
+                      Price: {ticket.count * lottery.price}
                     </p>
                     <p className="text-sm text-gray-500">Count: {ticket.count}</p>
                   </div>

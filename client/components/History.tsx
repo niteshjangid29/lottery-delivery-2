@@ -20,16 +20,16 @@ const OrderHistory: React.FC = () => {
       </div>
 
       {/* Order List */}
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex-1 overflow-y-auto p-4 ">
         {orderHistory.length > 0 ? (
           orderHistory.map((order, index) => (
             <div
               key={index}
-              className="bg-white p-4 mb-4 rounded-md shadow-md"
+              className="bg-white p-4 mb-4 rounded-md shadow-md cursor-pointer"
               onClick={() => router.push(`/history/${index}`)}
             >
               {/* Order Details */}
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex justify-between items-center mb-2">
                 <h2 className="text-lg font-semibold">Order #{index + 1}</h2>
                 {/* <p className="text-sm text-gray-500">
                   {new Date(order.orderDate).toLocaleDateString()}
@@ -70,10 +70,10 @@ const OrderHistory: React.FC = () => {
                     </div>
                     <div className="flex justify-between mt-1">
                       <p className="text-sm text-gray-500">
-                        Investment: ₹{investment}
+                        Price: <span className="text-blue-500">₹{investment}</span>
                       </p>
-                      <p className="text-sm text-gray-500">Result: Pending</p>
-                      <p className="text-sm text-gray-500">Rewards: ₹0</p>
+                      <p className="text-sm text-gray-500">Result: <span className='text-green-500'>TBD</span></p>
+                      <p className="text-sm text-gray-500">Rewards: <span className='text-red-500'>₹0</span></p>
                     </div>
                   </div>
                 );

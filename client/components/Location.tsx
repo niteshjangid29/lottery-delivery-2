@@ -14,13 +14,16 @@ const CityTracker: React.FC = () => {
 
   const fetchCityFromCoordinates = async (latitude: number, longitude: number) => {
     try {
-      const apiKey = "2c9a75084fec417eb6d77b43dca17aac";
+      const apiKey = process.env.NEXT_PUBLIC_OPENCAGEDATA_API_KEY;
+      if (!apiKey) {
+        throw new Error("API key is missing.");
+      }
+
       const response = await axios.get(
         `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apiKey}`
       );
 
-      const { city, country } =
-        response.data.results[0].components || {};
+      const { city, country } = response.data.results[0].components || {};
 
       if (city && country) {
         setLocation({ city, country });
@@ -39,7 +42,7 @@ const CityTracker: React.FC = () => {
           const { latitude, longitude } = position.coords;
           fetchCityFromCoordinates(latitude, longitude);
         },
-        (err) => {
+        () => {
           setError("Unable to fetch your location. Please enable location access.");
         }
       );

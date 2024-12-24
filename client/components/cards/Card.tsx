@@ -10,6 +10,7 @@ const LotteryTicketCard = () => {
   const router = useRouter();
   const lotteryState = useSelector((state: RootState) => state.lotteries) as LotteryState;
   const lottery = Object.values(lotteryState.alllotteries)
+  
   const [tickets, setTickets] = useState<Lottery[]>(lottery);
   const [sliderValue, setSliderValue] = useState<number>(Math.max(...lottery.map((ticket) => Number(ticket.prize))));
   const [showSlider, setShowSlider] = useState<boolean>(false);

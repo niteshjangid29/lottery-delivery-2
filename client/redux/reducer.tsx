@@ -7,7 +7,7 @@ const minReducer = combineReducers({
   currTab: currTabReducer,
   cart: cartReducer,
   order: orderReducer,
-  lotteries: lotteriesReducer
+  lotteries: lotteriesReducer,
 });
 
 export default minReducer;

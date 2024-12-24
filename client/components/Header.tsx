@@ -3,14 +3,43 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { CiSearch } from "react-icons/ci";
 import { FaUserAlt } from "react-icons/fa";
-
+import axios from "axios";
+import { ToLink } from "../app/page";
+import {store} from "../redux/store"
+import lotteriesreducer from "../redux/reducer/lotteryreducer";
+import {setSearchLotteries}  from "../redux/action/lotteryactions";
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
+  const [search, setSearch] = useState("");
   const router = useRouter();
 
-  // Toggle dropdown
+  const handleSearch = async () => {
+    console.log(search);
+    if (search.trim() === "") {
+      // notify("Please enter a search");
+      return;
+    }
+
+    try {
+      const res = await axios.get(`${ToLink}/search`, {
+        params: { search },
+        headers: {
+          // Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      router.push("/searchedlottery");
+      // setSearchBooks(res.data.data.books);
+      store.dispatch(setSearchLotteries(res.data.data.lotteries));
+      console.log(res.data.data.lotteries); // Log books
+    } catch (error) {
+      console.error(
+        "Error searching for books:",
+        // error.response?.data?.message || error.message
+      );
+    }
+  };
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
   };
@@ -68,9 +97,9 @@ const Header = () => {
                 </li>
                 <li
                   className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => router.push(`/tickets/${1}`)}
+                  onClick={() => router.push("/contactus")}
                 >
-                  My Tickets
+                  Contact Us
                 </li>
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                   Logout
@@ -92,12 +121,18 @@ const Header = () => {
       {/* Search Bar */}
       <div className="mt-3">
         <div className="flex items-center bg-white rounded-full shadow px-3 py-1">
-          <CiSearch className="text-gray-700" aria-label="Search Icon" />
+          <CiSearch className="text-gray-700" aria-label="Search Icon" onClick={handleSearch}/>
           <input
             type="text"
             placeholder="Search..."
             className="ml-2 flex-grow bg-transparent text-sm text-gray-700 outline-none placeholder-gray-400"
             aria-label="Search"
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
           />
         </div>
       </div>

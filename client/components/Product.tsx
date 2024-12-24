@@ -5,6 +5,7 @@ import { RootState } from '../redux/store';
 import { addToCart,updateCart } from "../redux/slice/cartSlice";
 // import { lotteryTickets } from "../utils/data/lotteryData";
 import { useSelector, useDispatch } from 'react-redux';
+import { MdCancel } from "react-icons/md";
 
 type Lottery = {
   _id: string;  
@@ -65,10 +66,8 @@ const LotteryTicket=() => {
 
   const addToCartHandler = () => {
     if (cartLottery) {
-    // Update existing lottery in the cart
     dispatch(updateCart({ lotteryId: currLottery[0]._id, updatedTickets: selectedTickets }));
   }else {
-    // Add new lottery to the cart
     console.log(currLottery[0])
     dispatch(
       addToCart({
@@ -166,10 +165,10 @@ const LotteryTicket=() => {
               >
                 {/* Cross Button */}
                 <button
-                  className="absolute text-lg -top-1 right-2 text-red-500 hover:text-red-700"
+                  className="absolute text-lg -top-2 -right-1 text-red-500 hover:text-red-700"
                   onClick={() => removeTicket(ticket.ticket)}
                 >
-                  ×
+                  <MdCancel/>
                 </button>
 
                 {/* Ticket Details */}

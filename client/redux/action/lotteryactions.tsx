@@ -1,5 +1,6 @@
 // Define the structure of a LotteryTicket
 export const SET_ALL_LOTTERIES = "SET_ALL_LOTTERIES";
+export const SET_SEARCH_LOTTERIES = "SET_SEARCH_LOTTERIES";
 
 export type LotteryTicket = {
   id: number;
@@ -17,11 +18,15 @@ export type SetAllLotteriesAction = {
   type: "SET_ALL_LOTTERIES";
   alllotteries: LotteryTicket[]; // Array of LotteryTicket objects
 };
+export type SearchLotteriesAction = {
+  type: "SET_SEARCH_LOTTERIES";
+  searchBooks: LotteryTicket[];
+};
 
-// Define the possible actions for lotteries
-// export type LotteryActions = SetAllLotteriesAction;
-
-// Example: Action Creator Function
+export const setSearchLotteries = (searchLotteries:LotteryTicket[]) => {
+  console.log("Search Lotteries", searchLotteries);
+  return { type: SET_SEARCH_LOTTERIES, searchLotteries };
+};
 export const setalllotteries = (alllotteries: LotteryTicket[]): SetAllLotteriesAction => {
   console.log("All Lotteries", alllotteries);
   return {
