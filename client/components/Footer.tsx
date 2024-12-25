@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { IoHome, IoTicket, IoDocumentText } from "react-icons/io5";
 import { FaTrophy, FaHistory } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,73 +8,99 @@ import { RootState } from "../redux/store";
 
 const Footer: React.FC = () => {
   const currTab = useSelector((state: RootState) => state.currTab.currTab);
+  const isRetailer = useSelector((state: RootState) => state.retailer.isRetailer);
+  const id = useSelector((state: RootState) => state.retailer.id);
+  const isLogin = useSelector((state: RootState) => state.user.isLogin);
   const dispatch = useDispatch();
-  const isLogin = useSelector((state: RootState) => state.user.isLogin)
+  const router = useRouter();
+
+  const navigateTo = (path: string, tab: string) => {
+    router.push(path);
+    dispatch(setCurrTab(tab));
+  };
+
   return (
     <footer
       className="bg-gray-100 py-2 flex justify-around border-t fixed bottom-0 w-full"
       style={{ position: "sticky", bottom: 0 }}
     >
-      <Link
+      {/* Home */}
+      <button
         className={`flex flex-col items-center ${
           currTab === "Home" ? "text-blue-500" : "text-gray-500"
         }`}
-        href="/"
-        onClick={() => dispatch(setCurrTab("Home"))}
+        onClick={() =>
+          navigateTo(isRetailer ? `/${id}` : `/`, "Home")
+        }
       >
         <span className="text-xl">
           <IoHome />
         </span>
         <p className="text-sm mt-1">Home</p>
-      </Link>
-      <Link
+      </button>
+
+      {/* Lottery */}
+      <button
         className={`flex flex-col items-center ${
           currTab === "Lottery" ? "text-blue-500" : "text-gray-500"
         }`}
-        href="/lottery"
-        onClick={() => dispatch(setCurrTab("Lottery"))}
+        onClick={() =>
+          navigateTo(isRetailer ? `/${id}/lottery` : `/lottery`, "Lottery")
+        }
       >
         <span className="text-xl">
           <IoTicket />
         </span>
         <p className="text-sm mt-1">Lottery</p>
-      </Link>
-      <Link
+      </button>
+
+      {/* Results */}
+      <button
         className={`flex flex-col items-center ${
           currTab === "Result" ? "text-blue-500" : "text-gray-500"
         }`}
-        href="/results"
-        onClick={() => dispatch(setCurrTab("Result"))}
+        onClick={() =>
+          navigateTo(isRetailer ? `/${id}/results` : `/results`, "Result")
+        }
       >
         <span className="text-xl">
           <IoDocumentText />
         </span>
         <p className="text-sm mt-1">Result</p>
-      </Link>
-      <Link
+      </button>
+
+      {/* Winner */}
+      <button
         className={`flex flex-col items-center ${
           currTab === "Winner" ? "text-blue-500" : "text-gray-500"
         }`}
-        href="/winner"
-        onClick={() => dispatch(setCurrTab("Winner"))}
+        onClick={() =>
+          navigateTo(isRetailer ? `/${id}/winner` : `/winner`, "Winner")
+        }
       >
         <span className="text-xl">
           <FaTrophy />
         </span>
         <p className="text-sm mt-1">Winner</p>
-      </Link>
-      <Link
+      </button>
+
+      {/* History */}
+      <button
         className={`flex flex-col items-center ${
           currTab === "History" ? "text-blue-500" : "text-gray-500"
         }`}
-        href={isLogin ? "/history":"login"}
-        onClick={() => {if(isLogin){dispatch(setCurrTab("History"))}}}
+        onClick={() =>
+          navigateTo(isLogin 
+            ? (isRetailer ? `/${id}/history` : `/history`) 
+            : (isRetailer ? `/${id}/login` : `/login`), 
+          "History")
+        }
       >
         <span className="text-xl">
           <FaHistory />
         </span>
         <p className="text-sm mt-1">History</p>
-      </Link>
+      </button>
     </footer>
   );
 };

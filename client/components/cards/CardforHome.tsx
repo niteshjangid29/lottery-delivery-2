@@ -10,10 +10,11 @@ const LotteryTicketCard: React.FC = () => {
   const dispatch = useDispatch();
   const lotteryState = useSelector((state: RootState) => state.lotteries) as LotteryState;
   const lottery = Object.values(lotteryState.alllotteries).slice(0, 6);
-
+  const isRetailer = useSelector((state: RootState) => state.retailer.isRetailer);
+  const ID = useSelector((state: RootState) => state.retailer.id);
   const handleBuy = (id: string): void => {
     console.log("Buy Now", id);
-    router.push(`/lottery/${id}`);
+    router.push(isRetailer ? `/${ID}/lottery/${id}`:`/lottery/${id}`);
   };
 
   const showAll = (): void => {

@@ -15,6 +15,8 @@ const Header = () => {
   const dispatch = useDispatch();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const isRetailer = useSelector((state: RootState) => state.retailer.isRetailer);
+  const ID = useSelector((state: RootState) => state.retailer.id);
   const headerRef = useRef<HTMLDivElement>(null);
   // const phone = useSelector((state:RootState)=>state.user.phoneNo)
   const [search, setSearch] = useState("");
@@ -22,7 +24,7 @@ const Header = () => {
   const isLogin=useSelector((state:RootState)=>state.user.isLogin)
   const handleLogin=()=>{
     if(!isLogin)
-    router.push("/login");
+    router.push(isRetailer ? `/${ID}/login`:"/login");
     else{
       dispatch(setUserPhone({
         phoneNo: "",
@@ -32,10 +34,10 @@ const Header = () => {
   }
   const handleCart=()=>{
     if(!isLogin){
-      router.push("/login");}
+      router.push(isRetailer ? `/${ID}:/login`:"/login");}
     else{
       // getallcart(phone);
-    router.push("/cart");
+    router.push(isRetailer ? `/${ID}/cart`:"/cart");
     }
   }
   const handleSearch = async () => {
@@ -52,7 +54,7 @@ const Header = () => {
           // Authorization: `Bearer ${accessToken}`,
         },
       });
-      router.push("/searchedlottery");
+      router.push(isRetailer ? `/${ID}/searchedlottery`:"/searchedlottery");
       // setSearchBooks(res.data.data.books);
       store.dispatch(setSearchLotteries(res.data.data.lotteries));
       console.log(res.data.data.lotteries); // Log books
@@ -120,7 +122,7 @@ const Header = () => {
                 </li>
                 <li
                   className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => router.push("/contactus")}
+                  onClick={() => router.push(isRetailer ? `/${ID}/contactus`:"/contactus")}
                 >
                   Contact Us
                 </li>

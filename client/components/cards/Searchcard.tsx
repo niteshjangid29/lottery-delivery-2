@@ -13,7 +13,8 @@ const LotteryTicketCard = () => {
   const searchParams = useSearchParams();
   
   const lotteryState = useSelector((state: RootState) => state.lotteries.searchLotteries);
-
+  const isRetailer = useSelector((state: RootState) => state.retailer.isRetailer);
+  const ID = useSelector((state: RootState) => state.retailer.id);
   const searchTerm = searchParams?.get("search") || "";
 
   const [tickets, setTickets] = useState<Lottery[]>(lotteryState);
@@ -25,7 +26,7 @@ const LotteryTicketCard = () => {
   const filterRef = useRef<HTMLDivElement>(null);
 
   const handleBuy = (id: string) => {
-    router.push(`/lottery/${id}`);
+    router.push(isRetailer ? `/${ID}/lottery/${id}`:`/lottery/${id}`);
   };
 
   const handleSliderChange = (event: Event, value: number | number[]) => {

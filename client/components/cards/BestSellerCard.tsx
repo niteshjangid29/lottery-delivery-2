@@ -7,6 +7,8 @@ import { useSelector } from "react-redux";
 const LotteryTicketCard = () => {
   const [startIndex, setStartIndex] = useState(0);
   const lotteryState = useSelector((state: RootState) => state.lotteries) as LotteryState;
+  const isRetailer = useSelector((state: RootState) => state.retailer.isRetailer);
+  const ID = useSelector((state: RootState) => state.retailer.id);
   const lotteryTickets = Object.values(lotteryState.alllotteries)
   const ticketsPerPage = 3;
   const router = useRouter();
@@ -25,7 +27,7 @@ const LotteryTicketCard = () => {
 
   const handleBuy = (id: string) => {
     console.log("Buy Now");
-    router.push(`/lottery/${id}`);
+    router.push(isRetailer ? `/${ID}/lottery/${id}`:`/lottery/${id}`);
   };
 
   const visibleTickets = lotteryTickets.slice(

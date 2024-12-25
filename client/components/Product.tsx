@@ -5,7 +5,7 @@ import { RootState } from '../redux/store';
 import { addToCart,updateCart } from "../redux/slice/cartSlice";
 import axios from "axios";
 import { useSelector, useDispatch } from 'react-redux';
-import { MdCancel } from "react-icons/md";
+import { MdDelete } from 'react-icons/md';
 import { setUserCart } from "../redux/slice/userSlice";
 import { ToLink } from "../app/page";
 type Lottery = {
@@ -14,9 +14,9 @@ type Lottery = {
   drawDate: string;
   prize: string;
   winningAmount: string;
-  alltickets: Array<{ count: number; ticket: string[] | string[] }>;
-  soldTickets: Array<{ count: number; ticket: string[] | string[] }>;
-  availableTickets: Array<{ count: number; ticket: string[] | string[] }>;
+  alltickets: Array<{ count: number; ticket: string[] }>;
+  soldTickets: Array<{ count: number; ticket: string[] }>;
+  availableTickets: Array<{ count: number; ticket: string[] }>;
 };
 
 type LotteryState = {
@@ -28,8 +28,11 @@ const LotteryTicket=() => {
    const lotteryState = useSelector((state: RootState) => state.lotteries) as LotteryState;
   const isLogin = useSelector((state:RootState)=> state.user.isLogin)
   const phone=useSelector((state:RootState)=> state.user.phoneNo);
-  const lotteryTickets = Object.values(lotteryState.alllotteries)
-  const currLottery=lotteryTickets.filter((lottery)=>(lottery._id)==slug);
+  const lotteryTickets = Object.values(lotteryState.alllotteries);
+  const retailerTicket = useSelector((state: RootState) => state.retailer.lotteries);
+  // console.log(retailerTicket[0]._id);
+  const mergeTickets = [...lotteryTickets, ...retailerTicket];
+  const currLottery=mergeTickets.filter((lottery)=>(lottery._id)==slug);
   console.log(currLottery);
   const [ticketCount, setTicketCount] = useState<number>(currLottery[0].availableTickets[0].count);
   const data = useSelector((state: RootState) => state.cart);
@@ -38,6 +41,8 @@ const LotteryTicket=() => {
   console.log(cartLottery?.tickets);
   const [selectedTickets, setSelectedTickets] = useState<{ ticket: string; count: number }[]>(cartLottery?.tickets ||[]);
   const router = useRouter();
+  const isRetailer = useSelector((state: RootState) => state.retailer.isRetailer);
+  const ID = useSelector((state: RootState) => state.retailer.id);
   const userCart = useSelector((state: RootState) => state.cart);
   const dispatch = useDispatch();
   const getTicketsByQuantity = (count: number) => {
@@ -70,7 +75,7 @@ const LotteryTicket=() => {
 
   const addToCartHandler = async() => {
     if (!isLogin) {
-      router.push('/login');
+      router.push(isRetailer ? `/${ID}/login`:'/login');
       return;
     }
   
@@ -116,7 +121,7 @@ const LotteryTicket=() => {
     dispatch(setUserCart(updatedCart));
   
     setSelectedTickets([]);
-    router.push("/cart");
+    router.push(isRetailer ? `/${ID}/cart`:"/cart");
   };
   
 
@@ -204,7 +209,7 @@ const LotteryTicket=() => {
                   className="absolute text-lg -top-2 -right-1 text-red-500 hover:text-red-700"
                   onClick={() => removeTicket(ticket.ticket)}
                 >
-                  <MdCancel/>
+                  <MdDelete/>
                 </button>
 
                 {/* Ticket Details */}
