@@ -4,6 +4,7 @@ dotenv.config({ path: "./../config.env" });
 
 const cartItemSchema = new mongoose.Schema({
   id: { type: String, required: true },
+  retailerID: { type: String, required: true },
   lotteryName: { type: String, required: true },
   drawDate: { type: String, required: true },
   price: { type: Number, required: true },

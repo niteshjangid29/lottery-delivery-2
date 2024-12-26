@@ -7,7 +7,7 @@ export type LotteryTicket = {
     winningAmount: string;
     alltickets: Array<{ count: number; ticket: string[] }>;
     soldTickets: Array<{ count: number; ticket: string[]  }>;
-    availableTickets: Array<{ count: number; ticket: string[]}>;
+    availableTickets: Array<{ count: number; ticket: string[] ;}>;
   };
 interface RetailerState {
   id:string;

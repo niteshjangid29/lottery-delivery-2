@@ -3,10 +3,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface Ticket {
   ticket: string;
   count: number;
+  // _id: string;
 }
 
 interface CartItem {
   id: string;
+  retailerID: string;
   lotteryName: string;
   drawDate: string;
   price: number;

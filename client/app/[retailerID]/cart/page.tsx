@@ -10,11 +10,15 @@ import axios from 'axios';
 import { ToLink } from '../../page';
 const LotteryList: React.FC = () => {
   const dispatch = useDispatch();
-  const data = useSelector((state: RootState) => state.cart);
-    const phone=useSelector((state:RootState)=> state.user.phoneNo);
-  
-  const lotteries = data.items;
-
+  const data = useSelector((state: RootState) => state.user);
+  const dataCart = useSelector((state: RootState) => state.cart);
+  console.log(data,dataCart);
+  const phone=useSelector((state:RootState)=> state.user.phoneNo);
+  const isRetailer = useSelector((state: RootState) => state.retailer.isRetailer);
+  console.log(isRetailer);
+  const ID = useSelector((state: RootState) => state.retailer.id);
+  const lotteries = (data.items).filter((item) => (item.retailerID===ID || item.retailerID==="Admin"));
+  console.log(lotteries[0]?.id);
   const totalAmount = lotteries.reduce((total, lottery) => {
     return (
       total +
@@ -25,17 +29,17 @@ const LotteryList: React.FC = () => {
     );
   }, 0);
 
-  const handleDelete = async(lotteryId: number, ticketId: number) => {
-    console.log(lotteryId, ticketId);
+  const handleDelete = async(lotteryId: string, ticketName: string) => {
+    console.log(lotteryId, ticketName);
     dispatch({
       type: 'cart/removeTicket',
-      payload: { lotteryId, ticketId },
+      payload: { lotteryId, ticketName },
     });
     const updatedLotteries = lotteries.map((lottery, id) => {
-      if (id === lotteryId) {
+      if (lottery.id === lotteryId) {
         return {
           ...lottery,
-          tickets: lottery.tickets.filter((_, tId) => tId !== ticketId),
+          tickets: lottery.tickets.filter((ticketID, tId) => ticketID.ticket !== ticketName),
         };
       }
       return lottery;
@@ -43,10 +47,11 @@ const LotteryList: React.FC = () => {
       console.log(updatedLotteries);
       try {
         await axios.post(`${ToLink}/userCart`, {updatedCart:{items:updatedLotteries},phone});
+        dispatch({ type: 'user/setUserCart', payload: {items:updatedLotteries} });
+        dispatch({ type: 'cart/setAllCart', payload: updatedLotteries }); 
       } catch (error:any) {
         console.error("Error adding to cart:", error.message);
       }
-      dispatch({ type: 'user/setUserCart', payload: updatedLotteries });
   };
 
   const handleOrder = () => {
@@ -112,7 +117,7 @@ const LotteryList: React.FC = () => {
                     </div>
                     {/* Delete Button */}
                     <MdDelete
-                      onClick={() => handleDelete(lotteryId, ticketId)}
+                      onClick={() => handleDelete(lottery.id, ticket.ticket)}
                       className="text-red-500 hover:text-red-700 transition duration-150 cursor-pointer"
                     />
                   </div>

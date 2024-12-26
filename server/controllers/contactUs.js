@@ -4,7 +4,7 @@ const User = require("../models/usermodel");
 dotenv.config({ path: "./../config.env" });
 exports.userAllCart = async (req, res) => {
   try {
-    const phone = req.query.phone; // Retrieve phone number from query parameters
+    const phone = req.query.phone;
 
     if (!phone) {
       return res.status(400).json({
@@ -79,6 +79,7 @@ exports.userCart = async (req, res) => {
     console.log(updatedCart.items);
     const formattedCart = updatedCart.items.map((item) => ({
       id: item.id,
+      retailerID: item.retailerID,
       lotteryName: item.lotteryName,
       drawDate: item.drawDate,
       price: item.price,

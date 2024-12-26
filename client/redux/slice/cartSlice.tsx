@@ -3,10 +3,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface Ticket {
   ticket: string;
   count: number;
+  // _id: string;
 }
 
-interface CartItem {
+export interface CartItem {
   id: string;
+  // _id: string;
+  retailerID: string;
   lotteryName: string;
   drawDate: string;
   price: number;
@@ -30,18 +33,25 @@ const cartSlice = createSlice({
     },
     removeTicket: (
       state,
-      action: PayloadAction<{ lotteryId: number; ticketId: number }>
+      action: PayloadAction<{ lotteryId: string; ticketName: string }>
     ) => {
-      const { lotteryId, ticketId } = action.payload;
-      const lottery = state.items.find((item,id) => id === lotteryId);
-
+      const { lotteryId, ticketName } = action.payload;
+      const lottery = state.items.find((item) => item.id === lotteryId);
+    
       if (lottery) {
-        lottery.tickets.splice(ticketId, 1);
-        if (lottery.tickets.length === 0) {
-          state.items = state.items.filter((item,id) => id !== lotteryId);
+        const ticketIndex = lottery.tickets.findIndex(
+          (ticket) => ticket.ticket === ticketName
+        );
+    
+        if (ticketIndex !== -1) {
+          lottery.tickets.splice(ticketIndex, 1);
+          if (lottery.tickets.length === 0) {
+            state.items = state.items.filter((item) => item.id !== lotteryId);
+          }
         }
       }
     },
+    
     addToCart: (state, action: PayloadAction<CartItem>) => {
       console.log(action.payload);
       state.items.push(action.payload);

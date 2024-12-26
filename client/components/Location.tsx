@@ -5,6 +5,7 @@ import axios from "axios";
 
 interface Location {
   city: string;
+  state:string
   country: string;
 }
 
@@ -23,10 +24,10 @@ const CityTracker: React.FC = () => {
         `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apiKey}`
       );
 
-      const { city, country } = response.data.results[0].components || {};
+      const { city,state, country } = response.data.results[0].components || {};
 
-      if (city && country) {
-        setLocation({ city, country });
+      if (city && state && country) {
+        setLocation({ city, state,country });
       } else {
         setError("Could not determine the city.");
       }
@@ -63,6 +64,7 @@ const CityTracker: React.FC = () => {
       {location ? (
         <div>
           <p className="text-gray-700">City: {location.city}</p>
+          <p className="text-gray-700">State: {location.state}</p>
           <p className="text-gray-700">Country: {location.country}</p>
         </div>
       ) : error ? (

@@ -8,11 +8,12 @@ export const getallcart = async (phone: string) => {
   try {
     const response = await axios.get(`${ToLink}/userAllCart`, {
       params: {
-        phone: phone, // Sending phone number as a query parameter
+        phone: phone,
       },
     });
     console.log(response.data.data);
     store.dispatch(setAllCart(response.data.data));
+    store.dispatch({ type: "user/setUserCart", payload: {items:response.data.data} });
   } catch (e) {
     console.log("error in cart fetching");
     console.log(e);

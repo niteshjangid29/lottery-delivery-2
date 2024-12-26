@@ -24,26 +24,28 @@ type LotteryState = {
 };
 const LotteryTicket=() => {
   const {slug} = useParams();
-  console.log(slug);
+  // console.log(slug);
+  const isRetailer = useSelector((state: RootState) => state.retailer.isRetailer);
+  const ID = useSelector((state: RootState) => state.retailer.id);
    const lotteryState = useSelector((state: RootState) => state.lotteries) as LotteryState;
+  //  const lotteryState = lotteryStates.
   const isLogin = useSelector((state:RootState)=> state.user.isLogin)
   const phone=useSelector((state:RootState)=> state.user.phoneNo);
   const lotteryTickets = Object.values(lotteryState.alllotteries);
   const retailerTicket = useSelector((state: RootState) => state.retailer.lotteries);
-  // console.log(retailerTicket[0]._id);
   const mergeTickets = [...lotteryTickets, ...retailerTicket];
   const currLottery=mergeTickets.filter((lottery)=>(lottery._id)==slug);
-  console.log(currLottery);
-  const [ticketCount, setTicketCount] = useState<number>(currLottery[0].availableTickets[0].count);
+  // console.log(currLottery);
+  const [ticketCount, setTicketCount] = useState<number>(currLottery[0]?.availableTickets[0].count);
   const data = useSelector((state: RootState) => state.cart);
   const lotteries = data.items;
-  const cartLottery = lotteries.find((lottery) => lottery.id === (currLottery[0]._id));
-  console.log(cartLottery?.tickets);
+  // console.log(lotteries);
+  const cartLottery = lotteries.find((lottery) => (lottery.id === ((currLottery[0]._id)) && (lottery.retailerID === ID || "Admin")));
+  // console.log(cartLottery);
   const [selectedTickets, setSelectedTickets] = useState<{ ticket: string; count: number }[]>(cartLottery?.tickets ||[]);
   const router = useRouter();
-  const isRetailer = useSelector((state: RootState) => state.retailer.isRetailer);
-  const ID = useSelector((state: RootState) => state.retailer.id);
-  const userCart = useSelector((state: RootState) => state.cart);
+  const userCart = (useSelector((state: RootState) => state.cart));
+  // const userCart = userCarts
   const dispatch = useDispatch();
   const getTicketsByQuantity = (count: number) => {
     const data = currLottery[0].availableTickets.find((item) => item.count === count);
@@ -82,7 +84,6 @@ const LotteryTicket=() => {
     let updatedCart;
   
     if (cartLottery) {
-      // Update the existing lottery's tickets
       updatedCart = {
         ...userCart,
         items: userCart.items.map((item) =>
@@ -91,12 +92,12 @@ const LotteryTicket=() => {
             : item
         ),
       };
-  
+      console.log(selectedTickets,userCart);
       dispatch(updateCart({ lotteryId: currLottery[0]._id, updatedTickets: selectedTickets }));
     } else {
-      // Add a new lottery to the cart
       const newLottery = {
         id: currLottery[0]._id,
+        retailerID: ID || "Admin",
         lotteryName: currLottery[0].name,
         drawDate: currLottery[0].drawDate,
         price: Number(currLottery[0].prize),
@@ -122,6 +123,7 @@ const LotteryTicket=() => {
   
     setSelectedTickets([]);
     router.push(isRetailer ? `/${ID}/cart`:"/cart");
+    console.log(selectedTickets);
   };
   
 

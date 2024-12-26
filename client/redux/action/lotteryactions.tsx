@@ -10,7 +10,7 @@ export type LotteryTicket = {
   winningAmount: string;
   alltickets: Array<{ count: number; ticket: string[] | string }>;
   soldTickets: Array<{ count: number; ticket: string[] | string }>;
-  availableTickets: Array<{ count: number; ticket: string[] | string }>;
+  availableTickets: Array<{ count: number; ticket: string[] | string}>;
 };
 
 // Define the structure of the action payload
