@@ -5,9 +5,9 @@ import { ToLink } from "../../app/page";
 import { LotteryTicket } from "../../redux/slice/retailerSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import img1 from "../../public/images/dearlottery.jpg";
-import img2 from "../../public/images/dearlottery.jpg";
-import img3 from "../../public/images/dearlottery.jpg";
+import img1 from "../../public/images/punjab.jpeg";
+import img2 from "../../public/images/rattan.png";
+import img3 from "../../public/images/rakhi.png";
 import { useRouter } from "next/navigation";
 import { store } from "../../redux/store";
 import { clearOrder } from "../../redux/slice/historySlice";
@@ -84,7 +84,7 @@ const RetailerCard: React.FC = () => {
             <Image
               src={img[idx]}
               alt={retailer.name}
-              className="w-full h-48 object-cover"
+              className="w-full h-auto object-cover"
               width={500}
               height={300}
             />

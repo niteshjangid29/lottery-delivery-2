@@ -9,12 +9,12 @@ exports.getalllottery = async (req, res) => {
       data: {
         lotteries: lotteries,
       },
-      messege: "all books found",
+      messege: "all lotteries found",
     });
   } catch (err) {
     return res.status(500).json({
       status: "error",
-      message: "Error While fetching books",
+      message: "Error While fetching lotteries",
       error: err,
     });
   }
@@ -34,14 +34,27 @@ exports.searchLottery = async (req, res) => {
       data: {
         lotteries,
       },
-      message: "Books found by search term",
+      message: "Lottery found by search term",
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({
       status: "error",
-      message: "Error searching books",
+      message: "Error searching lotteries",
       error: error.message,
     });
   }
 };
+// exports.updatelotteries = async (req, res) => {
+//   try {
+//     const { lotteries } = req.body;
+//     console.log(lotteries);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Error updating lotteries",
+//       error: error.message,
+//     });
+//   }
+// };

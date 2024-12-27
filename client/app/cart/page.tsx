@@ -8,11 +8,13 @@ import Image from 'next/image';
 import noCart from '../../public/images/noCart.jpg';
 import axios from 'axios';
 import { ToLink } from '../page';
+import { useRouter } from 'next/navigation';
 const LotteryList: React.FC = () => {
   const dispatch = useDispatch();
   const dataUser = useSelector((state: RootState) => state.user);
   const data = useSelector((state: RootState) => state.cart);
   console.log(dataUser,data);
+  const router = useRouter();
   const phone=useSelector((state:RootState)=> state.user.phoneNo);
   const lottery = (data.items).filter((item) => (item.retailerID==="Admin"));
   const [lotteries, setLotteries] = React.useState(lottery);
@@ -59,9 +61,10 @@ const LotteryList: React.FC = () => {
     try{
       await axios.post(`${ToLink}/userOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone});
       await axios.post(`${ToLink}/userCart`, {updatedCart:{items:[]},phone,ID:"Admin"});
+      // await axios.post(`${ToLink}/updatelotteries`, lotteries);
       // await axios.post(`${ToLink}/retailerOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone,ID:"Admin"});
       dispatch({ type: 'user/setUserCart', payload: {items:lotteries} });
-    dispatch({
+      dispatch({
       type: 'order/placeOrder',
       payload: {
         orders: lotteries,
@@ -69,13 +72,16 @@ const LotteryList: React.FC = () => {
         orderDate: new Date().toISOString(),
       },
     });
+    dispatch({
+      type: 'cart/clearCart',
+    });
+    alert("Ordered Successfully")
+    router.push("/lottery");
   }
   catch(error:any){
     console.error("Error placing order:", error.message);
   }
-    dispatch({
-      type: 'cart/clearCart',
-    });
+    
   };
   console.log(lotteries);
 

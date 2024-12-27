@@ -84,9 +84,21 @@ const Header = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  const getColorClass = (id: string) => {
+    switch (id) {
+      case "676c68cdc1c64b35fc8bcc8f":
+        return "bg-blue-400"; // Example color for ID 1
+      case "676c68cdc1c64b35fc8bcc90":
+        return "bg-green-400"; // Example color for ID 2
+      case "676c68cdc1c64b35fc8bcc91":
+        return "bg-red-400"; // Example color for ID 3
+      default:
+        return "bg-yellow-400"; // Default color
+    }
+  };
 
   return (
-    <div ref={headerRef} className="bg-yellow-400 px-4 py-3">
+    <div ref={headerRef} className={`px-4 py-3 ${getColorClass(ID)}`}>
       {/* Top Section */}
       <div className="flex justify-between items-center">
         {/* Branding */}
