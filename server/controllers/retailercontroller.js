@@ -87,7 +87,7 @@ exports.retailerOrder = async (req, res) => {
     const retailerDetails = await Retailer.findOne({
       _id: ID,
     });
-    console.log(retailerDetails);
+    // console.log(retailerDetails);
     if (ID !== "Admin" && !retailerDetails) {
       return res.status(404).json({
         status: "error",
@@ -98,7 +98,7 @@ exports.retailerOrder = async (req, res) => {
     const filteredRetailer = retailerDetails.orderHistory;
     retailerDetails.orderHistory = [...filteredRetailer, orderedData];
 
-    console.log("Final Retailer Detail", retailerDetails.orderHistory);
+    // console.log("Final Retailer Detail", retailerDetails.orderHistory);
 
     await Retailer.findOneAndUpdate({ _id: ID }, retailerDetails, {
       new: true,

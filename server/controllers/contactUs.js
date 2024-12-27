@@ -203,7 +203,7 @@ exports.userOrder = async (req, res) => {
 
     // Add the new order data to the user's order history
     userDetails.orderHistory = [...filteredUser, orderedData];
-    console.log("Final User Detail", userDetails.orderHistory);
+    // console.log("Final User Detail", userDetails.orderHistory);
 
     // Update the user in the database
     await User.findOneAndUpdate({ phone }, userDetails, { new: true });

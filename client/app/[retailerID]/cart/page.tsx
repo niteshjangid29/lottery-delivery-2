@@ -9,6 +9,9 @@ import noCart from '../../../public/images/noCart.jpg';
 import axios from 'axios';
 import { ToLink } from '../../page';
 import { useRouter } from 'next/navigation';
+import { getRetailerDetails } from "../../../utils/API/retailerDetails";
+import { getalllotteries } from "../../../utils/API/filteringlottery";
+import { setRetailerDetails } from '../../../redux/slice/retailerSlice';
 const LotteryList: React.FC = () => {
   const ID = useSelector((state: RootState) => state.retailer.id);
   const router=useRouter();
@@ -62,6 +65,7 @@ const LotteryList: React.FC = () => {
     try{
       await axios.post(`${ToLink}/userOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone});
       await axios.post(`${ToLink}/userCart`, {updatedCart:{items:[]},phone,ID});
+      await axios.post(`${ToLink}/updatelotteries`, {lotteries,ID});
       await axios.post(`${ToLink}/retailerOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone,ID});
       dispatch({ type: 'user/setUserCart', payload: {items:lotteries} });
       dispatch({
@@ -75,7 +79,30 @@ const LotteryList: React.FC = () => {
       dispatch({
         type: 'cart/clearCart',
       });
-      alert("Ordered Successfully")
+      alert("Ordered Successfully");
+      getalllotteries();
+      try {
+          const response = await getRetailerDetails(ID);
+          console.log(response);
+  
+          if (response?.status === 200) {
+            dispatch(
+              setRetailerDetails({
+                name: response.data.data.name,
+                email: response.data.data.email,
+                phoneNo: response.data.data.phone,
+                lotteries: response.data.data.lotteries,
+                isRetailer: true,
+                _id: response.data.data._id,
+                address: response.data.data.address,
+                about: response.data.data.about,
+                rating: response.data.data.rating,
+              })
+            );
+          } 
+        } catch (error) {
+          console.error("Failed to fetch retailer details:", error);
+        } 
       router.push(isRetailer ? `/${ID}/lottery`:"/lottery");
     }
     catch(error:any){

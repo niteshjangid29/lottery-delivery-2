@@ -9,6 +9,7 @@ import noCart from '../../public/images/noCart.jpg';
 import axios from 'axios';
 import { ToLink } from '../page';
 import { useRouter } from 'next/navigation';
+import { getalllotteries } from "../../utils/API/filteringlottery";
 const LotteryList: React.FC = () => {
   const dispatch = useDispatch();
   const dataUser = useSelector((state: RootState) => state.user);
@@ -61,7 +62,7 @@ const LotteryList: React.FC = () => {
     try{
       await axios.post(`${ToLink}/userOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone});
       await axios.post(`${ToLink}/userCart`, {updatedCart:{items:[]},phone,ID:"Admin"});
-      // await axios.post(`${ToLink}/updatelotteries`, lotteries);
+      await axios.post(`${ToLink}/updatelotteries`, {lotteries,ID:"Admin"});
       // await axios.post(`${ToLink}/retailerOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone,ID:"Admin"});
       dispatch({ type: 'user/setUserCart', payload: {items:lotteries} });
       dispatch({
@@ -75,7 +76,9 @@ const LotteryList: React.FC = () => {
     dispatch({
       type: 'cart/clearCart',
     });
-    alert("Ordered Successfully")
+    alert("Ordered Successfully");
+    getalllotteries();
+    
     router.push("/lottery");
   }
   catch(error:any){

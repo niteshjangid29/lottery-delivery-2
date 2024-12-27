@@ -8,6 +8,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { MdDelete } from 'react-icons/md';
 import { setUserCart } from "../redux/slice/userSlice";
 import { ToLink } from "../app/page";
+import { getRetailerDetails } from "../utils/API/retailerDetails";
+import { getalllotteries } from "../utils/API/filteringlottery";
+import {setRetailerDetails} from "../redux/slice/retailerSlice";
 type Lottery = {
   _id: string;  
   name: string;
@@ -37,13 +40,14 @@ const LotteryTicket=() => {
   const mergeTickets = [...lotteryTickets, ...retailerTicket];
   const currLottery=mergeTickets.filter((lottery)=>(lottery._id)==slug);
   // console.log(currLottery);
-  const [ticketCount, setTicketCount] = useState<number>(currLottery[0]?.availableTickets[0].count);
+  const [ticketCount, setTicketCount] = useState<number>(currLottery[0]?.availableTickets[0]?.count);
   const data = useSelector((state: RootState) => state.cart);
   const lotteries = data.items;
   // console.log(lotteries);
   const cartLottery = lotteries?.find((lottery) => (lottery.id === ((currLottery[0]._id)) && (lottery.retailerID === ID || "Admin")));
   // console.log(cartLottery);
   const [selectedTickets, setSelectedTickets] = useState<{ ticket: string; count: number }[]>(cartLottery?.tickets ||[]);
+  
   const router = useRouter();
   const userCart = (useSelector((state: RootState) => state.cart));
   // const userCart = userCarts
@@ -53,7 +57,7 @@ const LotteryTicket=() => {
     return data ? data.ticket : [];
   };
 
-  const [ticketNumbers, setTicketNumbers] = useState<string[]>(getTicketsByQuantity(currLottery[0].availableTickets[0].count));
+  const [ticketNumbers, setTicketNumbers] = useState<string[]>(getTicketsByQuantity(currLottery[0].availableTickets[0]?.count));
 
   const handleTicketSelection = (count: number) => {
     setTicketCount(count);
@@ -167,11 +171,36 @@ const LotteryTicket=() => {
     if(isRetailer) {
       await axios.post(`${ToLink}/userOrder`, {orders:newLottery,totalAmount,orderDate:new Date().toISOString(),phone});
       await axios.post(`${ToLink}/retailerOrder`, {orders:newLottery,totalAmount,orderDate:new Date().toISOString(),phone,ID});
+      await axios.post(`${ToLink}/updatelotteries`, {lotteries:newLottery,ID:ID});
+      try {
+        const response = await getRetailerDetails(ID);
+        console.log(response);
+
+        if (response?.status === 200) {
+          dispatch(
+            setRetailerDetails({
+              name: response.data.data.name,
+              email: response.data.data.email,
+              phoneNo: response.data.data.phone,
+              lotteries: response.data.data.lotteries,
+              isRetailer: true,
+              _id: response.data.data._id,
+              address: response.data.data.address,
+              about: response.data.data.about,
+              rating: response.data.data.rating,
+            })
+          );
+        } 
+      } catch (error) {
+        console.error("Failed to fetch retailer details:", error);
+      } 
     }
     else{
       await axios.post(`${ToLink}/userOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone});
+      await axios.post(`${ToLink}/updatelotteries`, {lotteries:newLottery,ID:"Admin"});
     }
     alert("Ordered Successfully")
+    getalllotteries();
     router.push(isRetailer ? `/${ID}/lottery`:"/lottery");
     console.log(newLottery);
   }
