@@ -2,6 +2,7 @@ export type Lottery = {
   _id: string ;  
   name: string;
   drawDate: string;
+  type:string;
   prize: string;
   winningAmount: string;
   alltickets: Array<{ count: number; ticket: string[] }>;

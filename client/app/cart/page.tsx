@@ -10,9 +10,9 @@ import axios from 'axios';
 import { ToLink } from '../page';
 const LotteryList: React.FC = () => {
   const dispatch = useDispatch();
-  const data = useSelector((state: RootState) => state.user);
-  const dataCart = useSelector((state: RootState) => state.cart);
-  console.log(data,dataCart);
+  const dataUser = useSelector((state: RootState) => state.user);
+  const data = useSelector((state: RootState) => state.cart);
+  console.log(dataUser,data);
   const phone=useSelector((state:RootState)=> state.user.phoneNo);
   const lottery = (data.items).filter((item) => (item.retailerID==="Admin"));
   const [lotteries, setLotteries] = React.useState(lottery);
@@ -45,7 +45,7 @@ const LotteryList: React.FC = () => {
       console.log(updatedLotteries);
       setLotteries(updatedLotteries);
       try {
-        await axios.post(`${ToLink}/userCart`, {updatedCart:{items:updatedLotteries},phone});
+        await axios.post(`${ToLink}/userCart`, {updatedCart:{items:updatedLotteries},phone, ID:"Admin"});
         dispatch({ type: 'user/setUserCart', payload: {items:updatedLotteries} });
         dispatch({ type: 'cart/setAllCart', payload: updatedLotteries }); 
       } catch (error:any) {
@@ -54,7 +54,13 @@ const LotteryList: React.FC = () => {
       
   };
 
-  const handleOrder = () => {
+  const handleOrder = async() => {
+    console.log(lotteries);
+    try{
+      await axios.post(`${ToLink}/userOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone});
+      await axios.post(`${ToLink}/userCart`, {updatedCart:{items:[]},phone,ID:"Admin"});
+      // await axios.post(`${ToLink}/retailerOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone,ID:"Admin"});
+      dispatch({ type: 'user/setUserCart', payload: {items:lotteries} });
     dispatch({
       type: 'order/placeOrder',
       payload: {
@@ -63,7 +69,10 @@ const LotteryList: React.FC = () => {
         orderDate: new Date().toISOString(),
       },
     });
-
+  }
+  catch(error:any){
+    console.error("Error placing order:", error.message);
+  }
     dispatch({
       type: 'cart/clearCart',
     });

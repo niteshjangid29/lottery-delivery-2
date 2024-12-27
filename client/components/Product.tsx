@@ -13,6 +13,7 @@ type Lottery = {
   name: string;
   drawDate: string;
   prize: string;
+  type:string;
   winningAmount: string;
   alltickets: Array<{ count: number; ticket: string[] }>;
   soldTickets: Array<{ count: number; ticket: string[] }>;
@@ -40,7 +41,7 @@ const LotteryTicket=() => {
   const data = useSelector((state: RootState) => state.cart);
   const lotteries = data.items;
   // console.log(lotteries);
-  const cartLottery = lotteries.find((lottery) => (lottery.id === ((currLottery[0]._id)) && (lottery.retailerID === ID || "Admin")));
+  const cartLottery = lotteries?.find((lottery) => (lottery.id === ((currLottery[0]._id)) && (lottery.retailerID === ID || "Admin")));
   // console.log(cartLottery);
   const [selectedTickets, setSelectedTickets] = useState<{ ticket: string; count: number }[]>(cartLottery?.tickets ||[]);
   const router = useRouter();
@@ -82,7 +83,7 @@ const LotteryTicket=() => {
     }
   
     let updatedCart;
-  
+
     if (cartLottery) {
       updatedCart = {
         ...userCart,
@@ -95,10 +96,13 @@ const LotteryTicket=() => {
       console.log(selectedTickets,userCart);
       dispatch(updateCart({ lotteryId: currLottery[0]._id, updatedTickets: selectedTickets }));
     } else {
+       
       const newLottery = {
         id: currLottery[0]._id,
+        // isAdmin: isAdmin,
         retailerID: ID || "Admin",
         lotteryName: currLottery[0].name,
+        type: currLottery[0].type,
         drawDate: currLottery[0].drawDate,
         price: Number(currLottery[0].prize),
         tickets: selectedTickets,
@@ -114,7 +118,7 @@ const LotteryTicket=() => {
   
     console.log(updatedCart);
     try {
-      await axios.post(`${ToLink}/userCart`, {updatedCart,phone});
+      await axios.post(`${ToLink}/userCart`, {updatedCart,phone, ID});
     } catch (error:any) {
       console.error("Error adding to cart:", error.message);
     }
@@ -136,6 +140,41 @@ const LotteryTicket=() => {
     setVisibleRows(visibleRows + 3);
   };
 
+  const handleBuy=async()=>{
+    if (!isLogin) {
+      router.push(isRetailer ? `/${ID}/login`:'/login');
+      return;
+    }
+    const newLottery = [{
+      id: currLottery[0]._id,
+      // isAdmin: isAdmin,
+      retailerID: ID || "Admin",
+      lotteryName: currLottery[0].name,
+      type: currLottery[0].type,
+      drawDate: currLottery[0].drawDate,
+      price: Number(currLottery[0].prize),
+      tickets: selectedTickets,
+    }];
+    const totalAmount = newLottery.reduce((total, lottery) => {
+      return (
+        total +
+        lottery.tickets.reduce(
+          (ticketTotal, ticket) => ticketTotal + ticket.count * lottery.price,
+          0
+        )
+      );
+    }, 0);
+    if(isRetailer) {
+      await axios.post(`${ToLink}/userOrder`, {orders:newLottery,totalAmount,orderDate:new Date().toISOString(),phone});
+      await axios.post(`${ToLink}/retailerOrder`, {orders:newLottery,totalAmount,orderDate:new Date().toISOString(),phone,ID});
+    }
+    else{
+      await axios.post(`${ToLink}/userOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone});
+    }
+    alert("Ordered Successfully")
+    router.push(isRetailer ? `/${ID}/lottery`:"/lottery");
+    console.log(newLottery);
+  }
   return (
     <div className="p-4 max-w-5xl mx-auto bg-white border border-gray-300 rounded-lg shadow-md">
       <h2 className="text-lg font-semibold text-gray-800 mb-2">{currLottery[0].name}</h2>
@@ -243,7 +282,7 @@ const LotteryTicket=() => {
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
           disabled={selectedTickets.length === 0}
-          onClick={() => alert("Proceeding to Buy Now!")}
+          onClick={handleBuy}
         >
           Buy Now for ₹
           {(Number(currLottery[0].prize) * selectedTickets.reduce((acc, item) => acc + item.count, 0)).toFixed(2)}

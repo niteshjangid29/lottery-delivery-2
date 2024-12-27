@@ -14,13 +14,9 @@ const LotteryTicketCard = () => {
   const isRetailer = useSelector((state: RootState) => state.retailer.isRetailer);
   const ID = useSelector((state: RootState) => state.retailer.id);
   const retailerTicket = useSelector((state: RootState) => state.retailer.lotteries);
-  // console.log(retailerTicket[0]._id);
   const mergeTickets = [...lottery, ...retailerTicket];
-  // console.log(mergeTickets);
-  
-  const [sliderValue, setSliderValue] = useState<number>(
-    Math.max(...mergeTickets.map((ticket) => Number(ticket.prize)))
-  );
+
+  const [sliderValue, setSliderValue] = useState<number>(Math.max(...mergeTickets.map((ticket) => Number(ticket.prize))));
   const [showSlider, setShowSlider] = useState<boolean>(false);
   const [showAllItems, setShowAllItems] = useState<boolean>(false); // State to toggle all items
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -74,8 +70,26 @@ const LotteryTicketCard = () => {
   const visibleTickets = showAllItems
   ? filteredTickets
   : filteredTickets.slice(0, 12);
+
+  // Function to get the appropriate gradient color based on lottery type
+  const getGradientColor = (lotteryType: string) => {
+    if (lotteryType === "Rajshree") {
+      return "bg-gradient-to-r from-yellow-300 to-yellow-500";
+    } else if (lotteryType === "Dreamone") {
+      return "bg-gradient-to-r from-red-300 to-red-500"; // Red gradient for Dreamone
+    } else {
+      return "bg-gradient-to-r from-yellow-300 to-yellow-500"; // Default to yellow gradient if unknown
+    }
+  };
   
-  console.log(filteredRetailerTickets,filteredLotteryTickets);
+  // Function to get the appropriate text color based on lottery type
+  const getTextColor = (lotteryType: string) => {
+    if (lotteryType === "Dreamone") {
+      return "text-white"; // White text for Dreamone (red gradient)
+    }
+    return "text-gray-700"; // Default text color for other lotteries
+  };
+
   return (
     <div className="flex justify-center items-center py-5">
       <div className="w-full max-w-5xl bg-white border-3 border-yellow-500 rounded-lg px-4">
@@ -126,15 +140,15 @@ const LotteryTicketCard = () => {
                         key={data._id || `retailer-${rowIndex}-${index}`} 
                         className="w-1/3 bg-white rounded-lg shadow-md p-2 relative border-2 border-dashed border-yellow-400"
                       >
-                        <div className="text-center text-sm font-bold text-gray-700 mb-1">
-                          <h1 className="uppercase tracking-wide text-yellow-500">
+                        <div className="text-center text-sm font-bold mb-1">
+                          <h1 className={`uppercase tracking-wide ${getTextColor(data.name)}`}>
                             {data.name.length <= 10
                               ? data.name
                               : data.name.slice(0, 9) + "..." }
                           </h1>
                         </div>
-                        <div className="bg-gradient-to-r from-yellow-300 to-yellow-500 p-1 rounded-md shadow-inner mb-2 text-center">
-                          <span className="text-green-600">{data.winningAmount}</span>
+                        <div className={`${data.type==="Dreamone" ? "bg-gradient-to-r from-red-300 to-red-500":"bg-gradient-to-r from-yellow-300 to-yellow-500"} p-1 rounded-md shadow-inner mb-2 text-center`}>
+                          <span className={data.type === "Dreamone" ? "text-white" : "text-green-600"}>{data.winningAmount}</span>
                           <p className="text-[7px] font-semibold text-gray-800">
                             Draw Date: {data.drawDate}
                           </p>
@@ -152,6 +166,7 @@ const LotteryTicketCard = () => {
                         </div>
                       </div>
                     ))}
+
                 </div>
               )
             )
@@ -179,15 +194,15 @@ const LotteryTicketCard = () => {
                         key={`lottery-${data._id}`}
                         className="w-1/3 bg-white rounded-lg shadow-md p-2 relative border-2 border-dashed border-yellow-400"
                       >
-                        <div className="text-center text-sm font-bold text-gray-700 mb-1">
-                          <h1 className="uppercase tracking-wide text-yellow-500">
+                        <div className="text-center text-sm font-bold mb-1">
+                          <h1 className={`uppercase tracking-wide ${getTextColor(data.name)}`}>
                             {data.name.length <= 10
                               ? data.name
                               : data.name.slice(0, 9) + "..." }
                           </h1>
                         </div>
-                        <div className="bg-gradient-to-r from-yellow-300 to-yellow-500 p-1 rounded-md shadow-inner mb-2 text-center">
-                          <span className="text-green-600">{data.winningAmount}</span>
+                        <div className={`${data.type==="Dreamone" ? "bg-gradient-to-r from-red-300 to-red-500":"bg-gradient-to-r from-yellow-300 to-yellow-500"} p-1 rounded-md shadow-inner mb-2 text-center`}>
+                          <span className={data.type === "Dreamone" ? "text-white" : "text-green-600"}>{data.winningAmount}</span>
                           <p className="text-[7px] font-semibold text-gray-800">
                             Draw Date: {data.drawDate}
                           </p>
@@ -205,6 +220,7 @@ const LotteryTicketCard = () => {
                         </div>
                       </div>
                     ))}
+
                 </div>
               )
             )

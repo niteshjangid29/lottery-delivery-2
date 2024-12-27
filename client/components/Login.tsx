@@ -8,7 +8,10 @@ import { setUserDetails, setUserPhone } from "../redux/slice/userSlice";
 import { RootState } from "../redux/store";
 import { FaArrowCircleLeft } from "react-icons/fa";
 import { getallcart } from "../utils/API/settingcart"
+import { getAllOrders } from "../utils/API/settingorder";
+
 const LoginPage: React.FC = () => {
+    const ID = useSelector((state: RootState) => state.retailer.id) || "Admin";
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [verificationCode, setVerificationCode] = useState<string>("");
   const [message, setMessage] = useState<string | null>(null);
@@ -59,7 +62,8 @@ const dispatch = useDispatch();
             phoneNo: phoneNumber,
             isLogin:true
         }))
-        getallcart(phoneNumber);
+        getallcart(phoneNumber,ID);
+        getAllOrders(phoneNumber,ID);
 
         setMessage("Phone number verified successfully!");
       } else {

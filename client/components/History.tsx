@@ -1,17 +1,30 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import img from "../public/images/noOrderHistory.png";
-
+import { getAllOrders } from '../utils/API/settingorder';
 const OrderHistory: React.FC = () => {
-  const orderHistory = useSelector(
-    (state: RootState) => state.order.orderHistory
-  );
+  const ID = useSelector((state: RootState) => state.retailer.id) || "Admin";
+  const phoneNumber = useSelector((state: RootState) => state.user.phoneNo);
+  // useEffect(() =>{
+  //   getAllOrders(phoneNumber,ID);
+  // },[]);
+  const isRetailer = useSelector((state: RootState) => state.retailer.isRetailer);
+  const orderHistory = useSelector((state: RootState) => state.order.orderHistory);
   const router = useRouter();
-
+  console.log(ID,orderHistory);
+  // Filter orders to include only those belonging to the logged-in retailer
+  const filteredOrderHistory = orderHistory.map((order) => {
+    // Filter lotteries in the order that belong to the retailer
+    const filteredOrders = order.orders.filter((lottery) => lottery.retailerID === ID);
+    // console.log(order.orders[0].retailerID);
+    // Return the order with filtered lotteries
+    return { ...order, orders: filteredOrders };
+  }).filter(order => order.orders.length > 0);  // Remove orders with no matching lotteries
+console.log(filteredOrderHistory);
   return (
     <div className="h-screen flex flex-col bg-white">
       {/* Header */}
@@ -20,27 +33,30 @@ const OrderHistory: React.FC = () => {
       </div>
 
       {/* Order List */}
-      <div className="flex-1 overflow-y-auto p-4 ">
-        {orderHistory.length > 0 ? (
-          orderHistory.map((order, index) => (
+      <div className="flex-1 overflow-y-auto p-4">
+        {filteredOrderHistory.length > 0 ? (
+          filteredOrderHistory.map((order, index) => (
             <div
               key={index}
               className="bg-white p-4 mb-4 rounded-md shadow-md cursor-pointer"
-              onClick={() => router.push(`/history/${index}`)}
+              onClick={() =>
+                router.push(
+                  isRetailer
+                    ? `/${ID}/history/${index}`
+                    : `/history/${index}`
+                )
+              }
             >
               {/* Order Details */}
               <div className="flex justify-between items-center mb-2">
                 <h2 className="text-lg font-semibold">Order #{index + 1}</h2>
-                {/* <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500">
                   {new Date(order.orderDate).toLocaleDateString()}
-                </p> */}
+                </p>
               </div>
               <div className="flex justify-between items-center">
-                <p className="text-sm text-gray-500 font-bold text-green-600 ">
-                  ₹{order.totalAmount} 
-                <span className="text-sm text-gray-500 ml-4">
-                  {new Date(order.orderDate).toLocaleDateString()}
-                </span>
+                <p className="text-sm text-gray-500 font-bold text-green-600">
+                  ₹{order.totalAmount}
                 </p>
               </div>
 
@@ -72,8 +88,12 @@ const OrderHistory: React.FC = () => {
                       <p className="text-sm text-gray-500">
                         Price: <span className="text-blue-500">₹{investment}</span>
                       </p>
-                      <p className="text-sm text-gray-500">Result: <span className='text-green-500'>TBD</span></p>
-                      <p className="text-sm text-gray-500">Rewards: <span className='text-red-500'>₹0</span></p>
+                      <p className="text-sm text-gray-500">
+                        Result: <span className="text-green-500">TBD</span>
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Rewards: <span className="text-red-500">₹0</span>
+                      </p>
                     </div>
                   </div>
                 );

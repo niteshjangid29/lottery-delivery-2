@@ -11,6 +11,7 @@ const LotterySchema = new mongoose.Schema({
   name: { type: String, required: true },
   drawDate: { type: String, required: true },
   prize: { type: String, required: true },
+  type: { type: String },
   winningAmount: { type: String, required: true },
   alltickets: { type: [ticketSchema], required: true },
   soldTickets: { type: [ticketSchema], required: true },

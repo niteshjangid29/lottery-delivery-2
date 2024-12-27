@@ -1,32 +1,76 @@
 "use client";
-import { useState } from "react";
+import { useState,useEffect } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
 import Image from "next/image";
 import img1 from "../public/images/img1.png";
 import img2 from "../public/images/img2.png";
 import img3 from "../public/images/img3.png";
-const slides = [
-  {
-    title: "Win ₹1,00,000!",
-    description: "Try your luck and win big with our exclusive lottery draw.",
-    image: img3,
-    gradient: "from-yellow-100 to-white",
-  },
-  {
-    title: "Daily Cash Prizes",
-    description: "Participate now for a chance to win daily cash rewards!",
-    image: img1,
-    gradient: "from-green-100 to-white",
-  },
-  {
-    title: "Your Luck Awaits!",
-    description: "Buy your ticket today and take the first step to winning.",
-    image: img2,
-    gradient: "from-purple-100 to-white",
-  },
-];
+import { ToLink } from "../app/page";
+import { LotteryTicket } from "../redux/slice/retailerSlice";
+import { RootState } from "../redux/store";
+interface Retailer {
+  _id: string;
+  name: string;
+  lotteries: LotteryTicket;
+  email: string;
+  phone: number;
+  about: string;
+  address:string;
+  rating: string;
+}
+
 
 export default function CardCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
+//   const [retailers, setRetailers] = useState<Retailer[]>([]);
+//   const [loading, setLoading] = useState<boolean>(true);
+  const retailerData=useSelector((state:RootState) => state.retailer);
+  const slides = [
+    {
+      title: retailerData.name,
+      description: retailerData.email,
+      image: img3,
+      gradient: "from-yellow-100 to-white",
+    },
+    {
+      title: "About",
+      description: retailerData.about.slice(0,90)+"...",
+      image: img1,
+      gradient: "from-green-100 to-white",
+    },
+    {
+      title: "Address",
+      description: retailerData.address,
+      image: img2,
+      gradient: "from-purple-100 to-white",
+    },
+  ];
+  console.log(retailerData);
+//     const filteredRetailer=retailers.filter((retailer) => retailer._id ===retailerData.id);
+//     console.log(filteredRetailer)
+//   useEffect(() => {
+//     const fetchRetailers = async () => {
+//       try {
+//         const response = await axios.get(`${ToLink}/retailersData`);
+//         if (response?.data?.data) {
+//           setRetailers(response.data.data);
+//         } else {
+//           console.error("Failed to fetch retailer data");
+//         }
+//         setLoading(false);
+//       } catch (error) {
+//         console.error("Error fetching retailer data:", error);
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchRetailers();
+//   }, []);
+
+//   if (loading) {
+//     return <p>Loading...</p>;
+//   }
 
   const handlePrev = () => {
     setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
@@ -47,14 +91,17 @@ export default function CardCarousel() {
           className={`flex items-center justify-between p-6 bg-gradient-to-r ${slides[currentSlide].gradient} rounded-xl shadow-lg transition-transform duration-300`}
         >
           <div>
-            <h3 className="text-xl font-bold text-gray-800">
+            <h3 className="text-lg font-bold text-gray-800">
               {slides[currentSlide].title}
             </h3>
             <p className="text-sm text-gray-500">
               {slides[currentSlide].description}
+              <br />
+              {currentSlide===0 ? retailerData.phoneNo: null}
+              <span className="text-red-600 font-bold">{currentSlide===2 ? `Rating: ${retailerData.rating} ★`: null}</span>
             </p>
           </div>
-          <div>
+          {/* <div>
             <Image
               src={slides[currentSlide].image}
               alt={slides[currentSlide].title}
@@ -62,7 +109,7 @@ export default function CardCarousel() {
               height={100}
               className="rounded-full"
             />
-          </div>
+          </div> */}
         </div>
         {/* Controls */}
         <div className="absolute top-1/2 -left-3 transform -translate-y-1/2">

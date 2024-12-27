@@ -9,6 +9,8 @@ interface Ticket {
 interface CartItem {
   id: string;
   retailerID: string;
+  // isAdmin: boolean;
+  type: string;
   lotteryName: string;
   drawDate: string;
   price: number;

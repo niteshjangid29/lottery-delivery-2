@@ -5,6 +5,7 @@ export const SET_SEARCH_LOTTERIES = "SET_SEARCH_LOTTERIES";
 export type LotteryTicket = {
   id: number;
   name: string;
+  type:string;
   drawDate: string;
   prize: string;
   winningAmount: string;

@@ -9,8 +9,10 @@ interface Ticket {
 export interface CartItem {
   id: string;
   // _id: string;
+  // isAdmin: boolean;
   retailerID: string;
   lotteryName: string;
+  type: string;
   drawDate: string;
   price: number;
   tickets: Ticket[];

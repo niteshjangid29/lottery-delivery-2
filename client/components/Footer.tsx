@@ -5,7 +5,6 @@ import { FaTrophy, FaHistory } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrTab } from "../redux/slice/currTabSlice";
 import { RootState } from "../redux/store";
-
 const Footer: React.FC = () => {
   const currTab = useSelector((state: RootState) => state.currTab.currTab);
   const isRetailer = useSelector((state: RootState) => state.retailer.isRetailer);

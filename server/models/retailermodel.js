@@ -12,6 +12,7 @@ const LotterySchema = new mongoose.Schema({
     default: () => new mongoose.Types.ObjectId(),
   },
   name: { type: String, required: true },
+  // type: { type: String },
   drawDate: { type: String, required: true },
   prize: { type: String, required: true },
   winningAmount: { type: String, required: true },
@@ -19,11 +20,34 @@ const LotterySchema = new mongoose.Schema({
   soldTickets: { type: [ticketSchema], required: true },
   availableTickets: { type: [ticketSchema], required: true },
 });
-
+const orderItemSchema = new mongoose.Schema({
+  id: { type: String, required: true },
+  retailerID: { type: String, required: true },
+  // isAdmin: { type: Boolean, required: true },
+  lotteryName: { type: String, required: true },
+  drawDate: { type: String, required: true },
+  type: { type: String },
+  price: { type: Number, required: true },
+  tickets: [
+    {
+      ticket: { type: String, required: true }, // Ticket number
+      count: { type: Number, required: true }, // Number of tickets for this ticket number
+    },
+  ],
+});
+const orderHistoryItemSchema = new mongoose.Schema({
+  orders: [orderItemSchema],
+  orderDate: { type: String, required: true },
+  totalAmount: { type: Number, required: true },
+});
 const retailerSchema = new mongoose.Schema({
   phone: { type: String, required: true, unique: true },
   name: { type: String },
   email: { type: String },
+  address: { type: String },
+  rating: { type: String },
+  about: { type: String },
+  orderHistory: [orderHistoryItemSchema],
   lotteries: { type: [LotterySchema] },
 });
 

@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import HowToUse from "../components/HowToUse";
 import Carousel from "../components/Carousel";
 import HomeCard from "../components/cards/CardforHome";
+import RetailerCard from "../components/cards/RetailerCard";
 import SuperCard from "../components/cards/Supercard";
 import BestsellerCard from "../components/cards/BestSellerCard";
 import { getalllotteries } from "../utils/API/filteringlottery";
@@ -21,9 +22,10 @@ const CenteredLayout = () => {
       <div className="bg-white w-full max-w-md mx-auto shadow-lg overflow-y-auto">
         <Header />
         <Carousel />
-        <SuperCard />
-        <BestsellerCard />
-        <HomeCard />
+        {/* <SuperCard /> */}
+        {/* <BestsellerCard /> */}
+        {/* <HomeCard /> */}
+        <RetailerCard/>
         <HowToUse />
         {/* <Location /> */}
         {/* <div className="position-relative fixed bottom-0"> */}

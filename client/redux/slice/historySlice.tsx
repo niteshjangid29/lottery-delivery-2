@@ -6,7 +6,9 @@ interface Ticket {
 }
 
 interface Lottery {
+  retailerID: string;
   lotteryName: string;
+  type: string;
   drawDate: string;
   price: number;
   tickets: Ticket[];
@@ -33,8 +35,11 @@ const orderSlice = createSlice({
     placeOrder: (state, action: PayloadAction<Order>) => {
       state.orderHistory.unshift(action.payload);
     },
+    clearOrder: (state) => {
+      state.orderHistory = []; // Clears the order history
+    },
   },
 });
 
-export const { placeOrder } = orderSlice.actions;
+export const { placeOrder, clearOrder } = orderSlice.actions;
 export default orderSlice.reducer;

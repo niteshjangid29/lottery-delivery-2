@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { MdDelete } from 'react-icons/md';
@@ -8,16 +8,19 @@ import Image from 'next/image';
 import noCart from '../../../public/images/noCart.jpg';
 import axios from 'axios';
 import { ToLink } from '../../page';
+import { useRouter } from 'next/navigation';
 const LotteryList: React.FC = () => {
+  const ID = useSelector((state: RootState) => state.retailer.id);
+  const router=useRouter();
   const dispatch = useDispatch();
-  const data = useSelector((state: RootState) => state.user);
-  const dataCart = useSelector((state: RootState) => state.cart);
-  console.log(data,dataCart);
+  const dataUser = useSelector((state: RootState) => state.user);
+    const data = useSelector((state: RootState) => state.cart);
+    console.log(dataUser,data);
   const phone=useSelector((state:RootState)=> state.user.phoneNo);
   const isRetailer = useSelector((state: RootState) => state.retailer.isRetailer);
   console.log(isRetailer);
-  const ID = useSelector((state: RootState) => state.retailer.id);
-  const lotteries = (data.items).filter((item) => (item.retailerID===ID || item.retailerID==="Admin"));
+  console.log(ID);
+  const lotteries = (data.items).filter((item) => (item.retailerID===ID));
   console.log(lotteries[0]?.id);
   const totalAmount = lotteries.reduce((total, lottery) => {
     return (
@@ -46,7 +49,7 @@ const LotteryList: React.FC = () => {
     }).filter((lottery) => lottery.tickets.length > 0); 
       console.log(updatedLotteries);
       try {
-        await axios.post(`${ToLink}/userCart`, {updatedCart:{items:updatedLotteries},phone});
+        await axios.post(`${ToLink}/userCart`, {updatedCart:{items:updatedLotteries},phone,ID});
         dispatch({ type: 'user/setUserCart', payload: {items:updatedLotteries} });
         dispatch({ type: 'cart/setAllCart', payload: updatedLotteries }); 
       } catch (error:any) {
@@ -54,19 +57,30 @@ const LotteryList: React.FC = () => {
       }
   };
 
-  const handleOrder = () => {
-    dispatch({
-      type: 'order/placeOrder',
-      payload: {
-        orders: lotteries,
-        totalAmount,
-        orderDate: new Date().toISOString(),
-      },
-    });
-
-    dispatch({
-      type: 'cart/clearCart',
-    });
+  const handleOrder = async() => {
+    console.log(lotteries);
+    try{
+      await axios.post(`${ToLink}/userOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone});
+      await axios.post(`${ToLink}/userCart`, {updatedCart:{items:[]},phone,ID});
+      await axios.post(`${ToLink}/retailerOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone,ID});
+      dispatch({ type: 'user/setUserCart', payload: {items:lotteries} });
+      dispatch({
+        type: 'order/placeOrder',
+        payload: {
+          orders: lotteries,
+          totalAmount,
+          orderDate: new Date().toISOString(),
+        },
+      });
+      dispatch({
+        type: 'cart/clearCart',
+      });
+      alert("Ordered Successfully")
+      router.push(isRetailer ? `/${ID}/lottery`:"/lottery");
+    }
+    catch(error:any){
+      console.error("Error placing order:", error.message);
+    }
   };
 
   return (

@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import HowToUse from "../../components/HowToUse";
-import Carousel from "../../components/Carousel";
+import CarouselRetailer from "../../components/CarouselRetailer";
 import HomeCard from "../../components/cards/CardforHome";
 import SuperCard from "../../components/cards/Supercard";
 import BestsellerCard from "../../components/cards/BestSellerCard";
@@ -38,6 +38,9 @@ const CenteredLayout = () => {
               lotteries: response.data.data.lotteries,
               isRetailer: true,
               _id: response.data.data._id,
+              address: response.data.data.address,
+              about: response.data.data.about,
+              rating: response.data.data.rating,
             })
           );
         } else {
@@ -83,7 +86,7 @@ const CenteredLayout = () => {
       <div className="bg-black flex-1"></div>
       <div className="bg-white w-full max-w-md mx-auto shadow-lg overflow-y-auto">
         <Header />
-        <Carousel />
+        <CarouselRetailer />
         <SuperCard />
         <BestsellerCard />
         <HomeCard />
