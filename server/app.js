@@ -16,6 +16,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://lottery-delivery-admin.vercel.app",
+      "https://lottog.shop",
       "https://lottery-delivery.vercel.app",
       "https://lottery-delivery-2-backend.vercel.app",
     ],
