@@ -1,5 +1,5 @@
 "use client";
-
+import { Suspense } from "react";
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Lottery } from "../../utils/data/lotteryData";
@@ -155,4 +155,12 @@ const LotteryTicketCard = () => {
   );
 };
 
-export default LotteryTicketCard;
+// export default LotteryTicketCard;
+const LotteryTicketCardPage=()=> {
+  return(
+    <Suspense fallback={<div>Loading...</div>}>
+      <LotteryTicketCard />
+    </Suspense>
+  );
+}
+export default LotteryTicketCardPage;

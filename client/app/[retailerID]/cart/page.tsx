@@ -7,7 +7,7 @@ import { FaArrowCircleLeft } from 'react-icons/fa';
 import Image from 'next/image';
 import noCart from '../../../public/images/noCart.jpg';
 import axios from 'axios';
-import { ToLink } from '../../page';
+// import { process.env.BACKEND_LINK } from '../../page';
 import { useRouter } from 'next/navigation';
 import { getRetailerDetails } from "../../../utils/API/retailerDetails";
 import { getalllotteries } from "../../../utils/API/filteringlottery";
@@ -41,18 +41,18 @@ const LotteryList: React.FC = () => {
       type: 'cart/removeTicket',
       payload: { lotteryId, ticketName },
     });
-    const updatedLotteries = lotteries.map((lottery, id) => {
+    const updatedLotteries = lotteries.map((lottery) => {
       if (lottery.id === lotteryId) {
         return {
           ...lottery,
-          tickets: lottery.tickets.filter((ticketID, tId) => ticketID.ticket !== ticketName),
+          tickets: lottery.tickets.filter((ticketID) => ticketID.ticket !== ticketName),
         };
       }
       return lottery;
     }).filter((lottery) => lottery.tickets.length > 0); 
       console.log(updatedLotteries);
       try {
-        await axios.post(`${ToLink}/userCart`, {updatedCart:{items:updatedLotteries},phone,ID});
+        await axios.post(`${process.env.BACKEND_LINK}/userCart`, {updatedCart:{items:updatedLotteries},phone,ID});
         dispatch({ type: 'user/setUserCart', payload: {items:updatedLotteries} });
         dispatch({ type: 'cart/setAllCart', payload: updatedLotteries }); 
       } catch (error:any) {
@@ -63,10 +63,10 @@ const LotteryList: React.FC = () => {
   const handleOrder = async() => {
     console.log(lotteries);
     try{
-      await axios.post(`${ToLink}/userOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone});
-      await axios.post(`${ToLink}/userCart`, {updatedCart:{items:[]},phone,ID});
-      await axios.post(`${ToLink}/updatelotteries`, {lotteries,ID});
-      await axios.post(`${ToLink}/retailerOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone,ID});
+      await axios.post(`${process.env.BACKEND_LINK}/userOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone});
+      await axios.post(`${process.env.BACKEND_LINK}/userCart`, {updatedCart:{items:[]},phone,ID});
+      await axios.post(`${process.env.BACKEND_LINK}/updatelotteries`, {lotteries,ID});
+      await axios.post(`${process.env.BACKEND_LINK}/retailerOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone,ID});
       dispatch({ type: 'user/setUserCart', payload: {items:lotteries} });
       dispatch({
         type: 'order/placeOrder',

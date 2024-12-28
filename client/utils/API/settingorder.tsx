@@ -1,7 +1,7 @@
 import axios from "axios";
 import { store } from "../../redux/store";
 import { placeOrder } from "../../redux/slice/historySlice"; // Update the path if needed
-import { ToLink } from "../../app/page";
+// import { process.env.BACKEND_LINK } from "../../app/page";
 
 // Ticket interface
 interface Ticket {
@@ -55,7 +55,7 @@ const mapApiResponseToRedux = (data: Order[]): Order[] => {
 export const getAllOrders = async (phone: string, renderID: string): Promise<void> => {
   console.log(`Fetching orders for phone: ${phone} and renderID: ${renderID}`);
   try {
-    const response = await axios.get<{ data: Order[] }>(`${ToLink}/userAllOrder`, {
+    const response = await axios.get<{ data: Order[] }>(`${process.env.BACKEND_LINK}/userAllOrder`, {
       params: {
         phone: phone,
       },

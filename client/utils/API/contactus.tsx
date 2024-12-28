@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ToLink } from "../../app/page";
+// import { process.env.BACKEND_LINK } from "../../app/page";
 interface ContactUsPayload {
     email: string;
     subject: string;
@@ -9,7 +9,7 @@ interface ContactUsPayload {
 export const submitContactUs = async (payload: ContactUsPayload): Promise<any> => {
     console.log(payload);
   try {
-    const response = await axios.post(`${ToLink}/contactus`, payload);
+    const response = await axios.post(`${process.env.BACKEND_LINK}/contactus`, payload);
     if (response.status === 200) {
       // notify("Message submitted successfully!");
       return response.data;

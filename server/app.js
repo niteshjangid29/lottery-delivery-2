@@ -16,7 +16,7 @@ app.use(
     origin: [
       "http://localhost:3000", // Local development
       // "https://ipl-fulltoss-kfi8.vercel.app",
-      // "https://ipl-fulltoss.onrender.com",
+      "https://lottery-delivery-2-backend.vercel.app/",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,

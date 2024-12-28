@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
-import { ToLink } from "../../app/page";
+// import { process.env.BACKEND_LINK } from "../../app/page";
 import { LotteryTicket } from "../../redux/slice/retailerSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
@@ -47,7 +47,7 @@ const RetailerCard: React.FC = () => {
   useEffect(() => {
     const fetchRetailers = async () => {
       try {
-        const response = await axios.get(`${ToLink}/retailersData`);
+        const response = await axios.get(`${process.env.BACKEND_LINK}/retailersData`);
         if (!response) {
           console.error("Failed to fetch retailer data");
         }

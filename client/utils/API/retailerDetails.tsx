@@ -1,8 +1,8 @@
 import axios from "axios";
-import { ToLink } from "../../app/page";
+// import { process.env.BACKEND_LINK } from "../../app/page";
 export const getRetailerDetails = async (retailerID:any) => {
     try {
-      const response = await axios.get(`${ToLink}/retailer/${retailerID}`);
+      const response = await axios.get(`${process.env.BACKEND_LINK}/retailer/${retailerID}`);
       if (!response) {
         console.error("Failed to fetch retailer data");
       }

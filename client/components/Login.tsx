@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { ToLink } from "../app/page";
+// import { process.env.BACKEND_LINK } from "../app/page";
 import UserDetail from "../components/Userdetail";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserDetails, setUserPhone } from "../redux/slice/userSlice";
@@ -37,7 +37,7 @@ const LoginPage: React.FC = () => {
 
   const handleSendCode = async () => {
     try {
-      const response = await axios.post(`${ToLink}/generateOtp`, { phoneNumber });
+      const response = await axios.post(`${process.env.BACKEND_LINK}/generateOtp`, { phoneNumber });
       if (response.data.success) {
         setMessage("Verification code sent!");
         setTimer(30);
@@ -51,7 +51,7 @@ const LoginPage: React.FC = () => {
 
   const handleVerifyCode = async () => {
     try {
-      const response = await axios.post(`${ToLink}/verifyOtp`, {
+      const response = await axios.post(`${process.env.BACKEND_LINK}/verifyOtp`, {
         phone: phoneNumber,
         otp: verificationCode,
       });

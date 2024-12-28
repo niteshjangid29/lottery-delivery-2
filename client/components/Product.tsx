@@ -7,7 +7,7 @@ import axios from "axios";
 import { useSelector, useDispatch } from 'react-redux';
 import { MdDelete } from 'react-icons/md';
 import { setUserCart } from "../redux/slice/userSlice";
-import { ToLink } from "../app/page";
+// import { process.env.BACKEND_LINK } from "../app/page";
 import { getRetailerDetails } from "../utils/API/retailerDetails";
 import { getalllotteries } from "../utils/API/filteringlottery";
 import {setRetailerDetails} from "../redux/slice/retailerSlice";
@@ -122,7 +122,7 @@ const LotteryTicket=() => {
   
     console.log(updatedCart);
     try {
-      await axios.post(`${ToLink}/userCart`, {updatedCart,phone, ID});
+      await axios.post(`${process.env.BACKEND_LINK}/userCart`, {updatedCart,phone, ID});
     } catch (error:any) {
       console.error("Error adding to cart:", error.message);
     }
@@ -169,9 +169,9 @@ const LotteryTicket=() => {
       );
     }, 0);
     if(isRetailer) {
-      await axios.post(`${ToLink}/userOrder`, {orders:newLottery,totalAmount,orderDate:new Date().toISOString(),phone});
-      await axios.post(`${ToLink}/retailerOrder`, {orders:newLottery,totalAmount,orderDate:new Date().toISOString(),phone,ID});
-      await axios.post(`${ToLink}/updatelotteries`, {lotteries:newLottery,ID:ID});
+      await axios.post(`${process.env.BACKEND_LINK}/userOrder`, {orders:newLottery,totalAmount,orderDate:new Date().toISOString(),phone});
+      await axios.post(`${process.env.BACKEND_LINK}/retailerOrder`, {orders:newLottery,totalAmount,orderDate:new Date().toISOString(),phone,ID});
+      await axios.post(`${process.env.BACKEND_LINK}/updatelotteries`, {lotteries:newLottery,ID:ID});
       try {
         const response = await getRetailerDetails(ID);
         console.log(response);
@@ -196,8 +196,8 @@ const LotteryTicket=() => {
       } 
     }
     else{
-      await axios.post(`${ToLink}/userOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone});
-      await axios.post(`${ToLink}/updatelotteries`, {lotteries:newLottery,ID:"Admin"});
+      await axios.post(`${process.env.BACKEND_LINK}/userOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone});
+      await axios.post(`${process.env.BACKEND_LINK}/updatelotteries`, {lotteries:newLottery,ID:"Admin"});
     }
     alert("Ordered Successfully")
     getalllotteries();

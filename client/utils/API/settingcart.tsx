@@ -1,13 +1,13 @@
 import axios from "axios";
 import { store } from "../../redux/store";
 import { setAllCart } from "../../redux/slice/cartSlice";
-import { ToLink } from "../../app/page";
+// import { process.env.BACKEND_LINK } from "../../app/page";
 import { CartItem } from "../../redux/slice/cartSlice";
 
 export const getallcart = async (phone: string, ID: string) => {
   console.log(phone);
   try {
-    const response = await axios.get(`${ToLink}/userAllCart`, {
+    const response = await axios.get(`${process.env.BACKEND_LINK}/userAllCart`, {
       params: {
         phone: phone,
       },
