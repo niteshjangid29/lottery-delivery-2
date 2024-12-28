@@ -196,10 +196,18 @@ const LotteryTicket=() => {
       } 
     }
     else{
-      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/userOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone});
+      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/userOrder`, {orders:newLottery,totalAmount,orderDate:new Date().toISOString(),phone});
       await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/updatelotteries`, {lotteries:newLottery,ID:"Admin"});
     }
-    alert("Ordered Successfully")
+    dispatch({
+      type: 'order/placeOrder',
+      payload: {
+        orders: newLottery,
+        totalAmount,
+        orderDate: new Date().toISOString(),
+      },
+    });
+    alert("Ordered Successfully");
     getalllotteries();
     router.push(isRetailer ? `/${ID}/lottery`:"/lottery");
     console.log(newLottery);
