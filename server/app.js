@@ -21,6 +21,7 @@ app.use(
       "https://lottery-delivery.vercel.app",
       "https://api.lottog.shop",
       "https://admin.lottog.shop",
+      "https://www.admin.lottog.shop",
       "https://lottery-delivery-2-backend.vercel.app",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
