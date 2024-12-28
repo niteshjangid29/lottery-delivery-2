@@ -15,8 +15,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000", // Local development
-      "https://lottery-delivery.vercel.app/",
-      "https://lottery-delivery-2-backend.vercel.app/",
+      "https://lottery-delivery.vercel.app",
+      "https://lottery-delivery-2-backend.vercel.app",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
