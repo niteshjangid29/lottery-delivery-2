@@ -118,7 +118,7 @@ const LoginPage: React.FC = () => {
                   </select>
                   <input
                     id="phoneNumber"
-                    type="text"
+                    type="number"
                     value={mainNumber}
                     onChange={(e) => setMainNumber(e.target.value)}
                     placeholder="Enter your phone number"

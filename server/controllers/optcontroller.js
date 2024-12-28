@@ -49,19 +49,23 @@ const verifyOtp = async (req, res) => {
         message: "Invalid or Expired OTP",
       });
     }
-
-    let user = await User.findOne({ phone });
+    const updatePhone = req.body.phone?.replace(/\s+/g, "");
+    let user = await User.findOne({ phone: updatePhone });
     console.log(user);
     if (!user) {
-      user = new User({ phone });
+      user = new User({ phone: updatePhone });
       await user.save();
     }
 
     await Otp.deleteOne({ _id: otpRecord._id });
 
-    const token = jwt.sign({ userId: user._id, phone }, config.JWT_SECRET, {
-      expiresIn: config.JWT_EXPIRES_IN,
-    });
+    const token = jwt.sign(
+      { userId: user._id, phone: updatePhone },
+      config.JWT_SECRET,
+      {
+        expiresIn: config.JWT_EXPIRES_IN,
+      }
+    );
     // const accessToken = htw.sign(
     //       { id: currentUser._id },
     //       process.env.ACCESS_JWT_SECRET,
