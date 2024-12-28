@@ -6,7 +6,7 @@ import Image from "next/image";
 import img1 from "../public/images/img1.png";
 import img2 from "../public/images/img2.png";
 import img3 from "../public/images/img3.png";
-// import { process.env.BACKEND_LINK } from "../app/page";
+// import { process.env.NEXT_PUBLIC_BACKEND_LINK } from "../app/page";
 import { LotteryTicket } from "../redux/slice/retailerSlice";
 import { RootState } from "../redux/store";
 interface Retailer {
@@ -52,7 +52,7 @@ export default function CardCarousel() {
 //   useEffect(() => {
 //     const fetchRetailers = async () => {
 //       try {
-//         const response = await axios.get(`${process.env.BACKEND_LINK}/retailersData`);
+//         const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/retailersData`);
 //         if (response?.data?.data) {
 //           setRetailers(response.data.data);
 //         } else {

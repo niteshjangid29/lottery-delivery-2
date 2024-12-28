@@ -15,7 +15,7 @@ import { setRetailerDetails } from "../../redux/slice/retailerSlice";
 import { useDispatch,useSelector } from "react-redux";
 import { getLocation } from "../../utils/API/location";
 import { RootState } from "../../redux/store";
-// export const process.env.BACKEND_LINK = "http://localhost:10000";
+// export const process.env.NEXT_PUBLIC_BACKEND_LINK = "http://localhost:10000";
 
 const CenteredLayout = () => {
   const { retailerID } = useParams();

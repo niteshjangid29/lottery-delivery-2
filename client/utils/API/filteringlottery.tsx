@@ -1,10 +1,10 @@
 import axios from "axios";
 import { store } from "../../redux/store";
 import * as lotteryactions from "../../redux/action/lotteryactions";
-// import { process.env.BACKEND_LINK } from "../../app/page";
+// import { process.env.NEXT_PUBLIC_BACKEND_LINK } from "../../app/page";
 export const getalllotteries = async () => {
     try {
-      const response = await axios.get(`${process.env.BACKEND_LINK}/lottery`)
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/lottery`)
       store.dispatch(lotteryactions.setalllotteries(response.data.data.lotteries));
       // store.dispatch(bookactions.set_filteredbook(response.data.data.books));
       console.log(response.data.data);
@@ -16,7 +16,7 @@ export const getalllotteries = async () => {
 
 // export const getalltags = async () => {
 //   try {
-//     const response = await axios.get(`${process.env.BACKEND_LINK}/getalltags`);
+//     const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/getalltags`);
 //     const tagarr = response.data.data.tags;
 //     const resultObject = tagarr.reduce((obj, [key, value]) => {
 //       obj[key] = {

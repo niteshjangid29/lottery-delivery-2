@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { CiSearch } from "react-icons/ci";
 import { FaUserAlt } from "react-icons/fa";
 import axios from "axios";
-// import { process.env.BACKEND_LINK } from "../app/page";
+// import { process.env.NEXT_PUBLIC_BACKEND_LINK } from "../app/page";
 import {RootState, store} from "../redux/store"
 import lotteriesreducer from "../redux/reducer/lotteryreducer";
 import {setSearchLotteries}  from "../redux/action/lotteryactions";
@@ -50,7 +50,8 @@ const Header = () => {
     }
 
     try {
-      const res = await axios.get(`${process.env.BACKEND_LINK}/search`, {
+      console.log(process.env.NEXT_PUBLIC_BACKEND_LINK);
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/search`, {
         params: { search },
         headers: {
           // Authorization: `Bearer ${accessToken}`,

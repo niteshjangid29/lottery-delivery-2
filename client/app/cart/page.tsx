@@ -7,7 +7,7 @@ import { FaArrowCircleLeft } from 'react-icons/fa';
 import Image from 'next/image';
 import noCart from '../../public/images/noCart.jpg';
 import axios from 'axios';
-// import { process.env.BACKEND_LINK } from '../page';
+// import { process.env.NEXT_PUBLIC_BACKEND_LINK } from '../page';
 import { useRouter } from 'next/navigation';
 import { getalllotteries } from "../../utils/API/filteringlottery";
 const LotteryList: React.FC = () => {
@@ -48,7 +48,7 @@ const LotteryList: React.FC = () => {
       console.log(updatedLotteries);
       setLotteries(updatedLotteries);
       try {
-        await axios.post(`${process.env.BACKEND_LINK}/userCart`, {updatedCart:{items:updatedLotteries},phone, ID:"Admin"});
+        await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/userCart`, {updatedCart:{items:updatedLotteries},phone, ID:"Admin"});
         dispatch({ type: 'user/setUserCart', payload: {items:updatedLotteries} });
         dispatch({ type: 'cart/setAllCart', payload: updatedLotteries }); 
       } catch (error:any) {
@@ -60,10 +60,10 @@ const LotteryList: React.FC = () => {
   const handleOrder = async() => {
     console.log(lotteries);
     try{
-      await axios.post(`${process.env.BACKEND_LINK}/userOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone});
-      await axios.post(`${process.env.BACKEND_LINK}/userCart`, {updatedCart:{items:[]},phone,ID:"Admin"});
-      await axios.post(`${process.env.BACKEND_LINK}/updatelotteries`, {lotteries,ID:"Admin"});
-      // await axios.post(`${process.env.BACKEND_LINK}/retailerOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone,ID:"Admin"});
+      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/userOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone});
+      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/userCart`, {updatedCart:{items:[]},phone,ID:"Admin"});
+      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/updatelotteries`, {lotteries,ID:"Admin"});
+      // await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/retailerOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone,ID:"Admin"});
       dispatch({ type: 'user/setUserCart', payload: {items:lotteries} });
       dispatch({
       type: 'order/placeOrder',

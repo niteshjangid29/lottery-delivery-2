@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { RootState } from '../redux/store';
 import { setUserDetails } from '../redux/slice/userSlice';
-// import { process.env.BACKEND_LINK } from '../app/page';
+// import { process.env.NEXT_PUBLIC_BACKEND_LINK } from '../app/page';
 import axios from 'axios';
 const UserDetailsPage: React.FC = () => {
   const router = useRouter();
@@ -20,7 +20,7 @@ const UserDetailsPage: React.FC = () => {
 
   const handleContinue = async() => {
     try {
-    const response = await axios.post(`${process.env.BACKEND_LINK}/userDetails`, {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/userDetails`, {
         name: newName,
         email: newEmail,
         address: newAddress,
