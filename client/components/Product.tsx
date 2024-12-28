@@ -205,7 +205,7 @@ const LotteryTicket=() => {
     console.log(newLottery);
   }
   return (
-    <div className="p-4 max-w-5xl mx-auto bg-white border border-gray-300 rounded-lg shadow-md">
+    <div className="p-4 max-w-5xl mx-auto bg-white border border-gray-300 rounded-lg shadow-md min-h-[calc(100vh-210px)]">
       <h2 className="text-lg font-semibold text-gray-800 mb-2">{currLottery[0].name}</h2>
       <p className="text-gray-600">Price per ticket: ₹{Number(currLottery[0].prize).toFixed(2)}</p>
       <p className="text-gray-500">Draw Date: {currLottery[0].drawDate}</p>

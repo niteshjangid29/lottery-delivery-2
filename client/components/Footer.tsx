@@ -69,7 +69,7 @@ const Footer: React.FC = () => {
       </button>
 
       {/* Winner */}
-      <button
+      {/* <button
         className={`flex flex-col items-center ${
           currTab === "Winner" ? "text-blue-500" : "text-gray-500"
         }`}
@@ -81,7 +81,7 @@ const Footer: React.FC = () => {
           <FaTrophy />
         </span>
         <p className="text-sm mt-1">Winner</p>
-      </button>
+      </button> */}
 
       {/* History */}
       <button

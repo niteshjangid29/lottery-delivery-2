@@ -13,6 +13,8 @@ import { useSelector,useDispatch } from "react-redux";
 import {setUserPhone} from "../redux/slice/userSlice"
 const Header = () => {
   const dispatch = useDispatch();
+  const address= useSelector((state:RootState) => state.user.address);
+  const location = useSelector((state:RootState) => state.location);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const isRetailer = useSelector((state: RootState) => state.retailer.isRetailer);
@@ -123,9 +125,9 @@ const Header = () => {
               className="absolute right-0 mt-0 w-36 bg-white shadow-lg rounded-lg text-sm text-gray-700 z-50 opacity-90"
             >
               <ul>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                {/* <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                   Profile
-                </li>
+                </li> */}
                 <li
                   className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                   onClick={handleCart}
@@ -151,7 +153,7 @@ const Header = () => {
       <div className="mt-2 text-sm text-black">
         HOME -{" "}
         <span className="font-semibold">
-          Divya Kumar, Near Panchvati Jajmau
+          {address? address :( `${location.state}, ${location.country}`)}
         </span>
       </div>
 

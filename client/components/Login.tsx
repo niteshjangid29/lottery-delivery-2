@@ -5,11 +5,11 @@ import { ToLink } from "../app/page";
 import UserDetail from "../components/Userdetail";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserDetails, setUserPhone } from "../redux/slice/userSlice";
-import { RootState } from "../redux/store";
+import { RootState,store } from "../redux/store";
 import { FaArrowCircleLeft } from "react-icons/fa";
 import { getallcart } from "../utils/API/settingcart";
 import { getAllOrders } from "../utils/API/settingorder";
-
+// import * as authactions from "../redux/action/authactions";
 const LoginPage: React.FC = () => {
   const ID = useSelector((state: RootState) => state.retailer.id) || "Admin";
   const [countryCode, setCountryCode] = useState<string>("+1"); // Default country code
@@ -57,6 +57,8 @@ const LoginPage: React.FC = () => {
       });
       if (response.data.success) {
         console.log(response.data);
+        // store.dispatch(authactions.setAccessToken(response.data.AccessToken));
+        // store.dispatch(authactions.setRefreshToken(response.data.RefreshToken));
         dispatch(
           setUserDetails({
             name: response.data.user.name,

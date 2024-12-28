@@ -78,13 +78,13 @@ const LotteryTicketCard = () => {
     } else if (lotteryType === "Dreamone") {
       return "bg-gradient-to-r from-red-300 to-red-500"; // Red gradient for Dreamone
     } else {
-      return "bg-gradient-to-r from-yellow-300 to-yellow-500"; // Default to yellow gradient if unknown
+      return "bg-gradient-to-r from-gray-200 via-gray-400 to-gray-600"; // Default to yellow gradient if unknown
     }
   };
   
   // Function to get the appropriate text color based on lottery type
   const getTextColor = (lotteryType: string) => {
-    if (lotteryType === "Dreamone") {
+    if (lotteryType === "Dear") {
       return "text-white"; // White text for Dreamone (red gradient)
     }
     return "text-gray-700"; // Default text color for other lotteries
@@ -147,8 +147,22 @@ const LotteryTicketCard = () => {
                               : data.name.slice(0, 9) + "..." }
                           </h1>
                         </div>
-                        <div className={`${data.type==="Dreamone" ? "bg-gradient-to-r from-red-300 to-red-500":"bg-gradient-to-r from-yellow-300 to-yellow-500"} p-1 rounded-md shadow-inner mb-2 text-center`}>
-                          <span className={data.type === "Dreamone" ? "text-white" : "text-green-600"}>{data.winningAmount}</span>
+                        <div
+                          className={`${
+                            data.type === "Dear"
+                              ? "bg-gradient-to-r from-red-300 to-red-500"
+                              : data.type === "Rajshree"
+                              ? "bg-gradient-to-r from-yellow-300 to-yellow-500"
+                              : "bg-gradient-to-r from-gray-300 to-gray-500"
+                          } p-1 rounded-md shadow-inner mb-2 text-center`}
+                        >
+                          <span className={`${
+                            data.type === "Dear"
+                              ? "text-white"
+                              : data.type === "Rajshree"
+                              ? "text-green-600"
+                              : "text-black"
+                          }`}>{data.winningAmount}</span>
                           <p className="text-[7px] font-semibold text-gray-800">
                             Draw Date: {data.drawDate}
                           </p>
@@ -201,8 +215,20 @@ const LotteryTicketCard = () => {
                               : data.name.slice(0, 9) + "..." }
                           </h1>
                         </div>
-                        <div className={`${data.type==="Dreamone" ? "bg-gradient-to-r from-red-300 to-red-500":"bg-gradient-to-r from-yellow-300 to-yellow-500"} p-1 rounded-md shadow-inner mb-2 text-center`}>
-                          <span className={data.type === "Dreamone" ? "text-white" : "text-green-600"}>{data.winningAmount}</span>
+                        <div className={`${
+                            data.type === "Dear"
+                              ? "bg-gradient-to-r from-red-300 to-red-500"
+                              : data.type === "Rajshree"
+                              ? "bg-gradient-to-r from-yellow-300 to-yellow-500"
+                              : "bg-gradient-to-r from-gray-300 to-gray-500"
+                          } p-1 rounded-md shadow-inner mb-2 text-center`}>
+                          <span className={`${
+                            data.type === "Dear"
+                              ? "text-white"
+                              : data.type === "Rajshree"
+                              ? "text-green-600"
+                              : "text-black"
+                          }`}>{data.winningAmount}</span>
                           <p className="text-[7px] font-semibold text-gray-800">
                             Draw Date: {data.drawDate}
                           </p>
@@ -232,7 +258,7 @@ const LotteryTicketCard = () => {
         </div>
 
         <div className="flex justify-center mt-4">
-          {!showAllItems && (
+          {!showAllItems && (filteredRetailerTickets.length >12) && (
             <button
               onClick={showAll}
               className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 transform hover:scale-105"

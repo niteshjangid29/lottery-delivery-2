@@ -64,10 +64,10 @@ const LotteryTicketCard = () => {
               // Determine the gradient color based on the lottery type
               const gradientStyle =
                 data.type === "Rajshree"
-                  ? "bg-gradient-to-r from-yellow-300 to-yellow-500"
-                  : data.type === "Dreamone"
                   ? "bg-gradient-to-r from-red-300 to-red-500"
-                  : "bg-gradient-to-r from-yellow-300 to-yellow-500"; // Default to Rajshree if type is unknown
+                  : data.type === "Dear"
+                  ? "bg-gradient-to-r from-yellow-300 to-yellow-500":"bg-gradient-to-r from-yellow-300 to-yellow-500"
+                  ; // Default to Rajshree if type is unknown
 
               return (
                 <div
@@ -85,7 +85,7 @@ const LotteryTicketCard = () => {
                   <div
                     className={`${gradientStyle} p-1 rounded-md shadow-inner mb-2 text-center`}
                   >
-                    <span className={data.type === "Dreamone" ? "text-white" : "text-green-600"}>{data.winningAmount}</span>
+                    <span className={data.type === "Dear" ? "text-green-600":"text-white"}>{data.winningAmount}</span>
                     <p className="text-[7px] font-semibold text-gray-800">
                       Draw Date: {data.drawDate}
                     </p>

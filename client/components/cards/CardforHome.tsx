@@ -37,11 +37,11 @@ const LotteryTicketCard: React.FC = () => {
   // Function to get the appropriate gradient color based on lottery type
   const getGradientColor = (lotteryType: string) => {
     if (lotteryType === "Rajshree") {
-      return "bg-gradient-to-r from-yellow-300 to-yellow-500";
-    } else if (lotteryType === "Dreamone") {
-      return "bg-gradient-to-r from-red-300 to-red-500";
+      return "bg-gradient-to-r from-red-300 to-red-500"
+    } else if (lotteryType === "Dear") {
+      return "bg-gradient-to-r from-yellow-300 to-yellow-500";;
     } else {
-      return "bg-gradient-to-r from-yellow-300 to-yellow-500"; // Default to yellow gradient if unknown
+      return "bg-gradient-to-r from-gray-200 via-gray-400 to-gray-600"; // Default to yellow gradient if unknown
     }
   };
 
@@ -73,8 +73,8 @@ const LotteryTicketCard: React.FC = () => {
                     <div
                       className={`${gradientStyle} p-1 rounded-md shadow-inner mb-2 text-center`}
                     >
-                      {/* Apply white text for Dreamone type, otherwise keep default color */}
-                      <span className={data.type === "Dreamone" ? "text-white" : "text-green-600"}>
+                      {/* Apply white text for Dear type, otherwise keep default color */}
+                      <span className={data.type === "Dear" ? "text-green-600":"text-white"}>
                         {data.winningAmount || "N/A"}
                       </span>
                       <p className="text-[7px] font-semibold text-black">

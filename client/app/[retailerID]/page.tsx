@@ -12,8 +12,9 @@ import BestsellerCard from "../../components/cards/BestSellerCard";
 import { getalllotteries } from "../../utils/API/filteringlottery";
 import { getRetailerDetails } from "../../utils/API/retailerDetails";
 import { setRetailerDetails } from "../../redux/slice/retailerSlice";
-import { useDispatch } from "react-redux";
-
+import { useDispatch,useSelector } from "react-redux";
+import { getLocation } from "../../utils/API/location";
+import { RootState } from "../../redux/store";
 // export const ToLink = "http://localhost:10000";
 
 const CenteredLayout = () => {
@@ -23,6 +24,7 @@ const CenteredLayout = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    getLocation();
     const fetchRetailerDetails = async () => {
       try {
         const response = await getRetailerDetails(retailerID);
@@ -56,13 +58,15 @@ const CenteredLayout = () => {
 
     fetchRetailerDetails();
     getalllotteries();
+    
   }, [retailerID, dispatch]);
-
+  const state= useSelector((state:RootState)=> state.location.state)
   if (isLoading) {
     return (
       <div className="h-screen flex items-center justify-center bg-black text-white">
-        <div className="text-center">
-          <p className="text-lg font-semibold">Loading...</p>
+        <div className="loader bg-gray-800 p-6 rounded-lg shadow-lg text-center max-w-lg">
+          <h1 className="text-2xl font-bold mb-4">Loading...</h1>
+          <p className="text-sm">Please wait while we load the data.</p>
         </div>
       </div>
     );
@@ -78,6 +82,18 @@ const CenteredLayout = () => {
           </p>
         </div>
       </div>
+    );
+  }
+  if(state !=="Uttar Pradesh" && state !=="Maharastra" && state !=="Pubjab"){
+    return (
+      <div className="h-screen flex items-center justify-center bg-black text-white">
+      <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center max-w-lg">
+        <h1 className="text-2xl font-bold mb-4">Out of State</h1>
+        <p className="text-sm mb-6">
+        Sorry, we are currently only serving customers in Uttar Pradesh. Please check back later for updates on our expansion plans.
+        </p>
+      </div>
+    </div>
     );
   }
 

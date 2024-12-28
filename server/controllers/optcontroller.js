@@ -16,10 +16,10 @@ const generateOtp = async (req, res) => {
       otp,
     });
     await newOtp.save();
-    // console.log(newOtp);
+    console.log(newOtp);
 
     const response = await sendOtpViaTwilio(phoneNumber, otp);
-
+    console.log(response);
     if (response.success) {
       res.status(200).json({ success: true, message: "OTP sent successfully" });
     } else {
@@ -62,6 +62,18 @@ const verifyOtp = async (req, res) => {
     const token = jwt.sign({ userId: user._id, phone }, config.JWT_SECRET, {
       expiresIn: config.JWT_EXPIRES_IN,
     });
+    // const accessToken = htw.sign(
+    //       { id: currentUser._id },
+    //       process.env.ACCESS_JWT_SECRET,
+    //       { expiresIn: process.env.ACCESS_JWT_EXPIRES_IN }
+    //     );
+
+    //     // Create JWT refresh token
+    //     const refreshToken = htw.sign(
+    //       { id: currentUser._id },
+    //       process.env.REFRESH_JWT_SECRET,
+    //       { expiresIn: process.env.REFRESH_JWT_EXPIRES_IN }
+    //     );
     console.log(token);
     res.status(200).json({
       success: true,

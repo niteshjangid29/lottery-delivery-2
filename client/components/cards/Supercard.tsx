@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 
-import rajshree from "../../public/images/rajshree.jpg";
-import dearone from "../../public/images/dearlottery.jpg";
+import rajshree from "../../public/images/rajshree.png";
+import dearone from "../../public/images/dearlottery.png";
 
 // Dummy data for 3 partner brands
 const partnerBrands = [
@@ -13,9 +13,9 @@ const partnerBrands = [
     imageUrl: rajshree, // Use the imported variable directly
   },
   {
-    name: "DreamOne",
+    name: "Dear",
     description:
-      "The dream product for the dream customer. With DreamOne, your aspirations are just a ticket away from becoming a reality.",
+      "The dear product for the dear customer. With Dear, your aspirations are just a ticket away from becoming a reality.",
     imageUrl: dearone, // Use the imported variable directly
   },
 ];

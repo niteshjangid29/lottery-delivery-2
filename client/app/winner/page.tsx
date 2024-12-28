@@ -5,11 +5,11 @@ const CenteredLayout = () => {
     <div className="h-screen flex bg-black">
       <div className="bg-black flex-1"></div>
 
-      <div className="bg-white w-full max-w-md mx-auto shadow-lg overflow-y-auto">
+      <div className="bg-white w-full max-w-md mx-auto shadow-lg overflow-y-auto min-h-screen">
         <Header />
-        {/* <div className="position-relative fixed bottom-0" style={{width: "31.8%"}}> */}
+        <div className="min-h-screen" >
         <Footer />
-        {/* </div> */}
+        </div>
       </div>
 
       <div className="bg-black flex-1"></div>

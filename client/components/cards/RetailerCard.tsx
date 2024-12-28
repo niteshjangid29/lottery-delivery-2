@@ -32,13 +32,16 @@ const RetailerCard: React.FC = () => {
   const [retailers, setRetailers] = useState<Retailer[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const phoneNumber = useSelector((state: RootState) => state.user.phoneNo);
+  const isLogin= useSelector((state:RootState) => state.user);
   // Correct function name (handleRetailer instead of handleRetailers)
   const handleRetailer = (id: string) => {
     router.push(`/${id}`);
     store.dispatch(clearOrder());
     store.dispatch(clearCart());
-    getAllOrders(phoneNumber,id);
-    getallcart(phoneNumber,id);
+    if(isLogin){
+      getAllOrders(phoneNumber,id);
+      getallcart(phoneNumber,id);
+  }
   };
 
   useEffect(() => {
