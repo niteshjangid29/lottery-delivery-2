@@ -84,18 +84,19 @@ const CenteredLayout = () => {
       </div>
     );
   }
-  if(state !=="Uttar Pradesh" && state !=="Maharastra" && state !=="Pubjab"){
-    return (
-      <div className="h-screen flex items-center justify-center bg-black text-white">
-      <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center max-w-lg">
-        <h1 className="text-2xl font-bold mb-4">Out of State</h1>
-        <p className="text-sm mb-6">
-        Sorry, we are currently only serving customers in Uttar Pradesh. Please check back later for updates on our expansion plans.
-        </p>
-      </div>
-    </div>
-    );
-  }
+  // if(state !=="Uttar Pradesh" && state !=="Maharastra" && state !=="Punjab")
+  //   {
+  //   return (
+  //     <div className="h-screen flex items-center justify-center bg-black text-white">
+  //     <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center max-w-lg">
+  //       <h1 className="text-2xl font-bold mb-4">Out of State</h1>
+  //       <p className="text-sm mb-6">
+  //       Sorry, we are currently only serving customers in Uttar Pradesh. Please check back later for updates on our expansion plans.
+  //       </p>
+  //     </div>
+  //   </div>
+  //   );
+  // }
 
   return (
     <div className="h-screen flex bg-black">

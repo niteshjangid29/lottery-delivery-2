@@ -49,8 +49,15 @@ const CenteredLayout = () => {
   return (
     <div className="h-screen flex bg-black">
       <div className="bg-black flex-1"></div>
+      <div className="bg-white w-full max-w-md mx-auto shadow-lg overflow-y-auto">
+          <Header />
+          <Carousel />
+          <RetailerCard />
+          <HowToUse />
+          <Footer />
+        </div>
 
-      {isAllowedState ? (
+      {/* {isAllowedState ? (
         <div className="bg-white w-full max-w-md mx-auto shadow-lg overflow-y-auto">
           <Header />
           <Carousel />
@@ -68,7 +75,7 @@ const CenteredLayout = () => {
             </p>
           </div>
         </div>
-      )}
+      )} */}
 
       <div className="bg-black flex-1"></div>
     </div>
