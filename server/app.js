@@ -10,20 +10,26 @@ const app = express();
 
 app.use(cookieParser());
 
-// CORS Configuration
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://lottery-delivery-admin.vercel.app",
+  "https://lottog.shop",
+  "https://www.lottog.shop",
+  "https://lottery-delivery.vercel.app",
+  "https://admin.lottog.shop",
+  "https://www.admin.lottog.shop",
+  "https://lottery-delivery-2-backend.vercel.app",
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://lottery-delivery-admin.vercel.app",
-      "https://lottog.shop",
-      "https://www.lottog.shop",
-      "https://lottery-delivery.vercel.app",
-      "https://admin.lottog.shop",
-      "https://www.admin.lottog.shop",
-      "https://lottery-delivery-2-backend.vercel.app",
-      "https://api.lottog.shop",
-    ],
+    origin: function (origin, callback) {
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -31,13 +37,13 @@ app.use(
 );
 
 app.options("*", cors());
-app.use(bodyParser.json());
 
+app.use(bodyParser.json());
 app.use(express.json());
 
-// app.use("/", userroutes);
 app.use("/", lotteryroutes);
 app.use("/", userroutes);
 app.use("/", otpRoutes);
 app.use("/", retailerRoutes);
+
 module.exports = app;
