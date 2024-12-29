@@ -19,10 +19,10 @@ app.use(
       "https://lottog.shop",
       "https://www.lottog.shop",
       "https://lottery-delivery.vercel.app",
-      "https://api.lottog.shop",
       "https://admin.lottog.shop",
       "https://www.admin.lottog.shop",
       "https://lottery-delivery-2-backend.vercel.app",
+      "https://api.lottog.shop",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
@@ -30,11 +30,9 @@ app.use(
   })
 );
 
-// Handle preflight requests for all routes
 app.options("*", cors());
 app.use(bodyParser.json());
 
-// Middleware to parse JSON request bodies
 app.use(express.json());
 
 // app.use("/", userroutes);
