@@ -1,5 +1,5 @@
 import Footer from "../../components/Footer";
-import Results from "../../components/Result";
+import Track from "../../components/OrderTracking";
 import Header from "../../components/Header";
 import CartButton from "../../components/CartButton";
 const CenteredLayout = () => {
@@ -9,7 +9,7 @@ const CenteredLayout = () => {
 
       <div className="bg-white w-full max-w-md mx-auto shadow-lg overflow-y-auto">
         <Header />
-        <Results />
+        <Track />
         <CartButton />
         {/* <div className="position-relative fixed bottom-0" style={{width: "440px"}}> */}
         <Footer />

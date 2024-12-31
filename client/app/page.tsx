@@ -9,7 +9,7 @@ import RetailerCard from "../components/cards/RetailerCard";
 import { getalllotteries } from "../utils/API/filteringlottery";
 import { getLocation } from "../utils/API/location";
 import { RootState } from "../redux/store";
-
+import CardButton from "../components/CartButton"
 // export const process.env.NEXT_PUBLIC_BACKEND_LINK = "http://localhost:10000";
 // export const process.env.NEXT_PUBLIC_BACKEND_LINK = "https://lottery-delivery-2-backend.vercel.app"
 
@@ -54,6 +54,7 @@ const CenteredLayout = () => {
           <Carousel />
           <RetailerCard />
           <HowToUse />
+          <CardButton />
           <Footer />
         </div>
 

@@ -34,6 +34,14 @@ const Header = () => {
     }))
     }
   }
+  const handleTrack=()=>{
+    // if(!isLogin)
+    //   router.push(isRetailer ? `/${ID}:/login`:"/login");
+    // else
+    {
+      router.push(isRetailer ? `/${ID}/trackorder`:"/trackorder");
+    }
+  }
   const handleCart=()=>{
     if(!isLogin){
       router.push(isRetailer ? `/${ID}:/login`:"/login");}
@@ -126,9 +134,9 @@ const Header = () => {
               className="absolute right-0 mt-0 w-36 bg-white shadow-lg rounded-lg text-sm text-gray-700 z-50 opacity-90"
             >
               <ul>
-                {/* <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                  Profile
-                </li> */}
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleTrack}>
+                  Track your Order
+                </li>
                 <li
                   className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                   onClick={handleCart}
