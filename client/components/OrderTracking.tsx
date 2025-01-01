@@ -51,8 +51,18 @@ const OrderTracking: React.FC = () => {
     if (currentStageIndex === stages.length - 1) {
       return "now"; // Delivered
     }
+    if(stages[currentStageIndex].name === "Ordered") {
+    const minutes = Math.ceil(remainingTime / 60)+8;
+    return `${minutes} min${minutes > 1 ? "s" : ""}`;
+  }
+  else if(stages[currentStageIndex].name === "Shipped") {
+    const minutes = Math.ceil(remainingTime / 60)+6;
+    return `${minutes} min${minutes > 1 ? "s" : ""}`;
+  }
+  else if(stages[currentStageIndex].name === "Out for Delivery") {
     const minutes = Math.ceil(remainingTime / 60);
     return `${minutes} min${minutes > 1 ? "s" : ""}`;
+  }
   };
 
   return (
