@@ -16,9 +16,12 @@ const LotteryTicketCard = () => {
   const retailerTicket = useSelector((state: RootState) => state.retailer.lotteries);
   const mergeTickets = [...lottery, ...retailerTicket];
 
-  const [sliderValue, setSliderValue] = useState<number>(Math.max(...mergeTickets.map((ticket) => Number(ticket.prize))));
+  const [sliderValue, setSliderValue] = useState<number>(
+    Math.max(...mergeTickets.map((ticket) => Number(ticket.prize)))
+  );
   const [showSlider, setShowSlider] = useState<boolean>(false);
-  const [showAllItems, setShowAllItems] = useState<boolean>(false); // State to toggle all items
+  const [showAllItems, setShowAllItems] = useState<boolean>(false);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]); // Selected types for filtering
   const dropdownRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
 
@@ -37,7 +40,13 @@ const LotteryTicketCard = () => {
   };
 
   const showAll = () => {
-    setShowAllItems(true); // Show all tickets
+    setShowAllItems(true);
+  };
+
+  const handleTypeChange = (type: string) => {
+    setSelectedTypes((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+    );
   };
 
   useEffect(() => {
@@ -56,38 +65,43 @@ const LotteryTicketCard = () => {
     };
   }, []);
 
-  // Filter tickets based on the prize value from slider
+  // Filter tickets based on the prize value and selected types
   const filteredRetailerTickets = retailerTicket.filter(
-    (ticket) => Number(ticket.prize) <= sliderValue
+    (ticket) =>
+      Number(ticket.prize) <= sliderValue &&
+      (selectedTypes.length === 0 || selectedTypes.includes(ticket.type))
   );
+
   const filteredLotteryTickets = lottery.filter(
-    (ticket) => Number(ticket.prize) <= sliderValue
+    (ticket) =>
+      Number(ticket.prize) <= sliderValue &&
+      (selectedTypes.length === 0 || selectedTypes.includes(ticket.type))
   );
-  
+
   const filteredTickets = [...filteredRetailerTickets, ...filteredLotteryTickets];
-  
+
   // Determine tickets to display based on showAllItems state
   const visibleTickets = showAllItems
-  ? filteredTickets
-  : filteredTickets.slice(0, 12);
+    ? filteredTickets
+    : filteredTickets.slice(0, 12);
 
   // Function to get the appropriate gradient color based on lottery type
   const getGradientColor = (lotteryType: string) => {
     if (lotteryType === "Rajshree") {
       return "bg-gradient-to-r from-yellow-300 to-yellow-500";
     } else if (lotteryType === "Dreamone") {
-      return "bg-gradient-to-r from-red-300 to-red-500"; // Red gradient for Dreamone
+      return "bg-gradient-to-r from-red-300 to-red-500";
     } else {
-      return "bg-gradient-to-r from-gray-200 via-gray-400 to-gray-600"; // Default to yellow gradient if unknown
+      return "bg-gradient-to-r from-gray-200 via-gray-400 to-gray-600";
     }
   };
-  
+
   // Function to get the appropriate text color based on lottery type
   const getTextColor = (lotteryType: string) => {
     if (lotteryType === "Dear") {
-      return "text-white"; // White text for Dreamone (red gradient)
+      return "text-white";
     }
-    return "text-gray-700"; // Default text color for other lotteries
+    return "text-gray-700";
   };
 
   return (
@@ -119,77 +133,104 @@ const LotteryTicketCard = () => {
                 onChange={handleSliderChange}
                 valueLabelDisplay="auto"
               />
+              <div >
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedTypes.includes("Rajshree")}
+                    onChange={() => handleTypeChange("Rajshree")}
+                  />
+                  <span>Rajshree</span>
+                </label>
+                <label className="flex items-center space-x-2 mt-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedTypes.includes("Dear")}
+                    onChange={() => handleTypeChange("Dear")}
+                  />
+                  <span>Dear</span>
+                </label>
+              </div>
             </div>
           )}
         </div>
 
         {/* Retailer Tickets */}
-        {isRetailer && <div>
-          <h2 className="text-xl font-bold text-gray-700 mb-4">Retailer Special</h2>
-          {filteredRetailerTickets.length > 0 ? (
-            Array.from({ length: Math.ceil(filteredRetailerTickets.length / 3) }).map(
-              (_, rowIndex) => (
-                <div
-                  key={`retailer-row-${rowIndex}`}
-                  className="flex justify-between space-x-2 mb-4"
-                >
-                  {filteredRetailerTickets
-                    .slice(rowIndex * 3, (rowIndex + 1) * 3)
-                    .map((data, index) => (
-                      <div
-                        key={data._id || `retailer-${rowIndex}-${index}`} 
-                        className="w-1/3 bg-white rounded-lg shadow-md p-2 relative border-2 border-dashed border-yellow-400"
-                      >
-                        <div className="text-center text-sm font-bold mb-1">
-                          <h1 className={`uppercase tracking-wide ${getTextColor(data.name)}`}>
-                            {data.name.length <= 10
-                              ? data.name
-                              : data.name.slice(0, 9) + "..." }
-                          </h1>
-                        </div>
+        {isRetailer && (
+          <div>
+            <h2 className="text-xl font-bold text-gray-700 mb-4">Retailer Special</h2>
+            {filteredRetailerTickets.length > 0 ? (
+              Array.from({ length: Math.ceil(filteredRetailerTickets.length / 3) }).map(
+                (_, rowIndex) => (
+                  <div
+                    key={`retailer-row-${rowIndex}`}
+                    className="flex justify-between space-x-2 mb-4"
+                  >
+                    {filteredRetailerTickets
+                      .slice(rowIndex * 3, (rowIndex + 1) * 3)
+                      .map((data, index) => (
                         <div
-                          className={`${
-                            data.type === "Dear"
-                              ? "bg-gradient-to-r from-red-300 to-red-500"
-                              : data.type === "Rajshree"
-                              ? "bg-gradient-to-r from-yellow-300 to-yellow-500"
-                              : "bg-gradient-to-r from-gray-300 to-gray-500"
-                          } p-1 rounded-md shadow-inner mb-2 text-center`}
+                          key={data._id || `retailer-${rowIndex}-${index}`}
+                          className="w-1/3 bg-white rounded-lg shadow-md p-2 relative border-2 border-dashed border-yellow-400"
                         >
-                          <span className={`${
-                            data.type === "Dear"
-                              ? "text-white"
-                              : data.type === "Rajshree"
-                              ? "text-green-600"
-                              : "text-black"
-                          }`}>{data.winningAmount}</span>
-                          <p className="text-[7px] font-semibold text-gray-800">
-                            Draw Date: {data.drawDate}
-                          </p>
-                          <p className="text-[7px] font-semibold text-gray-800">
-                            Ticket Price: ₹{data.prize}
-                          </p>
-                        </div>
-                        <div className="text-center">
-                          <button
-                            onClick={() => handleBuy(data._id)}
-                            className="w-full bg-gradient-to-br from-blue-500 to-purple-600 hover:from-purple-600 hover:to-blue-500 text-white font-medium py-1 px-2 rounded-md shadow-lg transition-all duration-300 transform hover:scale-105 text-xs"
+                          <div className="text-center text-sm font-bold mb-1">
+                            <h1
+                              className={`uppercase tracking-wide ${getTextColor(
+                                data.name
+                              )}`}
+                            >
+                              {data.name.length <= 10
+                                ? data.name
+                                : data.name.slice(0, 9) + "..."}
+                            </h1>
+                          </div>
+                          <div
+                            className={`${
+                              data.type === "Dear"
+                                ? "bg-gradient-to-r from-red-300 to-red-500"
+                                : data.type === "Rajshree"
+                                ? "bg-gradient-to-r from-yellow-300 to-yellow-500"
+                                : "bg-gradient-to-r from-gray-300 to-gray-500"
+                            } p-1 rounded-md shadow-inner mb-2 text-center`}
                           >
-                            Buy Now
-                          </button>
+                            <span
+                              className={`${
+                                data.type === "Dear"
+                                  ? "text-white"
+                                  : data.type === "Rajshree"
+                                  ? "text-green-600"
+                                  : "text-black"
+                              }`}
+                            >
+                              {data.winningAmount}
+                            </span>
+                            <p className="text-[7px] font-semibold text-gray-800">
+                              Draw Date: {data.drawDate}
+                            </p>
+                            <p className="text-[7px] font-semibold text-gray-800">
+                              Ticket Price: ₹{data.prize}
+                            </p>
+                          </div>
+                          <div className="text-center">
+                            <button
+                              onClick={() => handleBuy(data._id)}
+                              className="w-full bg-gradient-to-br from-blue-500 to-purple-600 hover:from-purple-600 hover:to-blue-500 text-white font-medium py-1 px-2 rounded-md shadow-lg transition-all duration-300 transform hover:scale-105 text-xs"
+                            >
+                              Buy Now
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-
-                </div>
+                      ))}
+                  </div>
+                )
               )
-            )
-          ) : (
-            <p className="text-gray-500 text-center mt-4">
-              No retailer products available.
-            </p>
-          )}
-        </div>}
+            ) : (
+              <p className="text-gray-500 text-center mt-4">
+                No retailer products available.
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Lottery Tickets */}
         <div>
@@ -209,26 +250,36 @@ const LotteryTicketCard = () => {
                         className="w-1/3 bg-white rounded-lg shadow-md p-2 relative border-2 border-dashed border-yellow-400"
                       >
                         <div className="text-center text-sm font-bold mb-1">
-                          <h1 className={`uppercase tracking-wide ${getTextColor(data.name)}`}>
+                          <h1
+                            className={`uppercase tracking-wide ${getTextColor(
+                              data.name
+                            )}`}
+                          >
                             {data.name.length <= 10
                               ? data.name
-                              : data.name.slice(0, 9) + "..." }
+                              : data.name.slice(0, 9) + "..."}
                           </h1>
                         </div>
-                        <div className={`${
+                        <div
+                          className={`${
                             data.type === "Dear"
                               ? "bg-gradient-to-r from-red-300 to-red-500"
                               : data.type === "Rajshree"
                               ? "bg-gradient-to-r from-yellow-300 to-yellow-500"
                               : "bg-gradient-to-r from-gray-300 to-gray-500"
-                          } p-1 rounded-md shadow-inner mb-2 text-center`}>
-                          <span className={`${
-                            data.type === "Dear"
-                              ? "text-white"
-                              : data.type === "Rajshree"
-                              ? "text-green-600"
-                              : "text-black"
-                          }`}>{data.winningAmount}</span>
+                          } p-1 rounded-md shadow-inner mb-2 text-center`}
+                        >
+                          <span
+                            className={`${
+                              data.type === "Dear"
+                                ? "text-white"
+                                : data.type === "Rajshree"
+                                ? "text-green-600"
+                                : "text-black"
+                            }`}
+                          >
+                            {data.winningAmount}
+                          </span>
                           <p className="text-[7px] font-semibold text-gray-800">
                             Draw Date: {data.drawDate}
                           </p>
@@ -246,19 +297,18 @@ const LotteryTicketCard = () => {
                         </div>
                       </div>
                     ))}
-
                 </div>
               )
             )
           ) : (
             <p className="text-gray-500 text-center mt-4">
-              No tickets available under the selected price range.
+              No tickets available under the selected filters.
             </p>
           )}
         </div>
 
         <div className="flex justify-center mt-4">
-          {!showAllItems && (filteredRetailerTickets.length >12) && (
+          {!showAllItems && filteredTickets.length > 12 && (
             <button
               onClick={showAll}
               className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 transform hover:scale-105"

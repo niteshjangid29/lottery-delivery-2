@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import img1 from "../public/images/img1.png";
 import img2 from "../public/images/img2.png";
 import img3 from "../public/images/img3.png";
+
 const slides = [
   {
     title: "Win ₹1,00,000!",
@@ -28,23 +29,30 @@ const slides = [
 export default function CardCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const handlePrev = () => {
-    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
-  };
-
+  // Function to go to the next slide
   const handleNext = () => {
     setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
   };
 
+  // Function to go to the previous slide
+  const handlePrev = () => {
+    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+  };
+
+  // Automatically cycle through slides every 2 seconds
+  useEffect(() => {
+    const interval = setInterval(handleNext, 3000); // Change slides every 2 seconds
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }, []);
+
   return (
-    <div className="flex flex-col items-center pt-10  bg-white">
+    <div className="flex flex-col items-center pt-10 bg-white">
       {/* Carousel Wrapper */}
       <div className="relative w-[350px]">
-        {" "}
-        {/* Adjusted width */}
         {/* Slide */}
         <div
-          className={`flex items-center justify-between p-6 bg-gradient-to-r ${slides[currentSlide].gradient} rounded-xl shadow-lg transition-transform duration-300`}
+          className={`flex items-center justify-between p-6 bg-gradient-to-r ${slides[currentSlide].gradient} rounded-xl shadow-lg transition-transform duration-700 ease-in-out`}
+          
         >
           <div>
             <h3 className="text-xl font-bold text-gray-800">
@@ -64,6 +72,7 @@ export default function CardCarousel() {
             />
           </div>
         </div>
+
         {/* Controls */}
         <div className="absolute top-1/2 -left-3 transform -translate-y-1/2">
           <button
