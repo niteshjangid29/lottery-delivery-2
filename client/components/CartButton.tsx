@@ -8,10 +8,14 @@ import { FaArrowRight } from "react-icons/fa6";
 const CartViewButton = () => {
     const isRetailer= useSelector((state:RootState)=> state.retailer.isRetailer);
     const ID= useSelector((state:RootState)=> state.retailer.id);
-
+    const isLogin=useSelector((state:RootState)=> state.user.isLogin);
     const router=useRouter();
     const handleCart=()=>{
-        router.push(isRetailer ? `/${ID}/cart`:"/cart")
+      if(!isLogin){
+        router.push(isRetailer ? `/${ID}:/login`:"/login");}
+      else{
+      router.push(isRetailer ? `/${ID}/cart`:"/cart");
+      }
     }
   return (
     <div className="fixed bottom-20 left-0 right-0 flex justify-center z-50">
