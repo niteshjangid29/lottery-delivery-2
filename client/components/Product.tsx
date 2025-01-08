@@ -11,6 +11,10 @@ import { setUserCart } from "../redux/slice/userSlice";
 import { getRetailerDetails } from "../utils/API/retailerDetails";
 import { getalllotteries } from "../utils/API/filteringlottery";
 import {setRetailerDetails} from "../redux/slice/retailerSlice";
+import jsPDF from 'jspdf';
+import QRCode from "./QRCode";
+import html2canvas from "html2canvas";
+import ReactDOM from "react-dom/client";
 type Lottery = {
   _id: string;  
   name: string;
@@ -31,14 +35,17 @@ const LotteryTicket=() => {
   // console.log(slug);
   const isRetailer = useSelector((state: RootState) => state.retailer.isRetailer);
   const ID = useSelector((state: RootState) => state.retailer.id);
+  const retailer = useSelector((state: RootState) => state.retailer)
    const lotteryState = useSelector((state: RootState) => state.lotteries) as LotteryState;
   //  const lotteryState = lotteryStates.
   const isLogin = useSelector((state:RootState)=> state.user.isLogin)
   const phone=useSelector((state:RootState)=> state.user.phoneNo);
+  const dataUser = useSelector((state: RootState) => state.user);
   const lotteryTickets = Object.values(lotteryState.alllotteries);
   const retailerTicket = useSelector((state: RootState) => state.retailer.lotteries);
   const mergeTickets = [...lotteryTickets, ...retailerTicket];
   const currLottery=mergeTickets.filter((lottery)=>(lottery._id)==slug);
+  const [showModal, setShowModal] = useState(false);
   // console.log(currLottery);
   const [ticketCount, setTicketCount] = useState<number>(currLottery[0]?.availableTickets[0]?.count);
   const data = useSelector((state: RootState) => state.cart);
@@ -144,7 +151,7 @@ const LotteryTicket=() => {
     setVisibleRows(visibleRows + 3);
   };
 
-  const handleBuy=async()=>{
+  const handleBuy=async(deliveryOption: string)=>{
     if (!isLogin) {
       router.push(isRetailer ? `/${ID}/login`:'/login');
       return;
@@ -168,6 +175,7 @@ const LotteryTicket=() => {
         )
       );
     }, 0);
+    console.log(newLottery);
     if(isRetailer) {
       await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/userOrder`, {orders:newLottery,totalAmount,orderDate:new Date().toISOString(),phone});
       await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/retailerOrder`, {orders:newLottery,totalAmount,orderDate:new Date().toISOString(),phone,ID});
@@ -208,12 +216,206 @@ const LotteryTicket=() => {
       },
     });
     alert("Ordered Successfully");
+    if (deliveryOption === "office") 
+      {
+      const certificate = document.createElement('div');
+      certificate.style.width = '595px';
+      certificate.style.padding = '5px';
+      certificate.style.background = '#fff';
+      certificate.style.fontFamily = 'Arial, sans-serif';
+      certificate.style.boxSizing = 'border-box';
+      certificate.style.position = 'absolute';
+      certificate.style.top = '-9999px';
+      document.body.appendChild(certificate);
+
+      const root = ReactDOM.createRoot(certificate);
+
+      root.render(
+        <div className="py-10 px-2 bg-white shadow-md rounded-lg">
+          {/* Header */}
+          <div className="text-center mb-6">
+            <h1 className="text-xl font-bold text-gray-800">Ticket Purchase Certificate</h1>
+            <p className="text-sm text-gray-500 mt-1">Official Confirmation of Purchase</p>
+          </div>
+
+          {/* Beneficiary Details */}
+          <div className="mb-8">
+            <h2 className="text-lg font-bold text-gray-800 border-b pb-2 mb-4">
+              Beneficiary Details
+            </h2>
+            <div className="text-sm text-gray-700">
+              <p className="mb-2">
+                <span className="font-medium">Name:</span> {dataUser?.name}
+              </p>
+              <p className="mb-2">
+                <span className="font-medium">Email:</span> {dataUser?.email}
+              </p>
+              <p className="mb-2">
+                <span className="font-medium">Phone:</span> {dataUser?.phoneNo}
+              </p>
+              <p className="mb-2">
+                <span className="font-medium">Address:</span> {dataUser?.address}
+              </p>
+            </div>
+          </div>
+
+          {/* Retailer Details */}
+          {retailer.isRetailer && <div className="mb-6">
+            <h2 className="text-lg font-semibold text-gray-800 border-b pb-2">Retailer Details</h2>
+            <div className="mt-4 text-sm text-gray-700">
+              <p>
+                <span className="font-medium">Name:</span> {retailer?.name}
+              </p>
+              <p className="mt-2">
+                <span className="font-medium">Email:</span> {retailer?.email}
+              </p>
+              <p className="mt-2">
+                <span className="font-medium">Address:</span> {retailer?.address}
+              </p>
+            </div>
+          </div>}
+
+          {/* Ticket Information */}
+          <div className="mb-8">
+            <h2 className="text-lg font-bold text-gray-800 border-b pb-2 mb-4">
+              Ticket Information
+            </h2>
+            {newLottery.map((lottery) => (
+              <div key={lottery.id} className="mb-6">
+                <h3 className="text-md font-semibold text-gray-700 mb-2">
+                  {lottery.lotteryName}
+                </h3>
+                <p className="text-sm text-gray-600 mb-1">
+                  <span className="font-medium">Draw Date:</span> {new Date(lottery.drawDate).toLocaleDateString()}
+                </p>
+                <p className="text-sm text-gray-600 mb-3">
+                  <span className="font-medium">Price:</span> ₹{lottery.price}
+                </p>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">Tickets:</h4>
+                <div className="bg-gray-50 border rounded-lg p-4 text-sm">
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                    {lottery.tickets.map((ticket) => (
+                      <li
+                        key={ticket.ticket}
+                        className="bg-white border rounded-md p-2 shadow-sm"
+                      >
+                        Ticket Number: <span className="font-medium">{ticket.ticket}</span>
+                        <br />
+                        Count: <span className="font-medium">{ticket.count}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Total Price */}
+            <div className="mt-4 text-lg font-semibold text-green-600">
+              Total Price: ₹ {totalAmount}
+              {/* {lotteries.reduce(
+                (total, lottery) =>
+                  total +
+                  lottery.tickets.reduce(
+                    (lotteryTotal, ticket) => lotteryTotal + ticket.count * lottery.price,
+                    0
+                  ),
+                0
+              )} */}
+            </div>
+
+          {/* QR Code Section */}
+          <div className="text-center mt-6">
+            <QRCode url={`https://www.lottog.shop/officelottery/${newLottery[0].id}`} />
+            {/* <QRCode url={`http://localhost:3000/officelottery/${newLottery[0].id}`} /> */}
+
+            <p className="text-sm text-gray-500 mt-2">
+              Scan this QR code for more details
+            </p>
+          </div>
+
+          {/* Footer */}
+          <div className="mt-8 text-center text-gray-500 text-xs border-t pt-4">
+            <p>
+              Together, we verify and ensure ticket authorization.
+              <br /> For assistance, contact the support team.
+            </p>
+          </div>
+        </div>
+
+      );
+
+      setTimeout(async () => {
+        const canvas = await html2canvas(certificate, {
+          scale: 2,
+          useCORS: true,
+        });
+
+        
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4',
+        });
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const imgWidth = pdfWidth - 20;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        const adjustedHeight =
+          imgHeight > pdfHeight - 20 ? pdfHeight - 20 : imgHeight;
+        const adjustedWidth =
+          (canvas.width * adjustedHeight) / canvas.height;
+        const xOffset = (pdfWidth - adjustedWidth) / 2;
+        const yOffset = (pdfHeight - adjustedHeight) / 2;
+
+        pdf.addImage(
+          imgData,
+          'PNG',
+          xOffset,
+          yOffset,
+          adjustedWidth,
+          adjustedHeight
+        );
+        pdf.save('Invoice.pdf');
+
+        root.unmount();
+        document.body.removeChild(certificate);
+      }, 500);
+    }
     getalllotteries();
     router.push(isRetailer ? `/${ID}/lottery`:"/lottery");
     console.log(newLottery);
   }
   return (
     <div className="p-4 max-w-5xl mx-auto bg-white border border-gray-300 rounded-lg shadow-md min-h-[calc(100vh-210px)]">
+      {/* Modal */}
+      {showModal && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center">
+        {/* Overlay */}
+        <div
+          className="absolute inset-0 bg-black bg-opacity-50"
+          onClick={() => setShowModal(false)} // Close modal on clicking overlay
+        ></div>
+        {/* Modal */}
+        <div className="relative bg-white rounded-lg shadow-lg p-6 w-80 z-10">
+          <h2 className="text-lg font-semibold mb-4">Choose Delivery Option</h2>
+          <button
+            onClick={() => handleBuy("home")}
+            className="w-full bg-green-500 text-white py-2 px-4 rounded-md mb-2"
+          >
+            Deliver to Home
+          </button>
+          <button
+            onClick={() => handleBuy("office")}
+            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md"
+          >
+            Office Delivery
+          </button>
+        </div>
+      </div>
+    )}
+
       <h2 className="text-lg font-semibold text-gray-800 mb-2">{currLottery[0].name}</h2>
       <p className="text-gray-600">Price per ticket: ₹{Number(currLottery[0].prize).toFixed(2)}</p>
       <p className="text-gray-500">Draw Date: {currLottery[0].drawDate}</p>
@@ -319,7 +521,7 @@ const LotteryTicket=() => {
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
           disabled={selectedTickets.length === 0}
-          onClick={handleBuy}
+          onClick={() => setShowModal(true)}
         >
           Buy Now for ₹
           {(Number(currLottery[0].prize) * selectedTickets.reduce((acc, item) => acc + item.count, 0)).toFixed(2)}
