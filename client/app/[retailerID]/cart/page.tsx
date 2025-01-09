@@ -73,7 +73,7 @@ const LotteryList: React.FC = () => {
   const handleOrder = async(deliveryOption: string) => {
     console.log(lotteries);
     try{
-      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/userOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone});
+      const response=await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/userOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone});
       await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/userCart`, {updatedCart:{items:[]},phone,ID});
       await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/updatelotteries`, {lotteries,ID});
       await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/retailerOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone,ID});
@@ -199,8 +199,8 @@ const LotteryList: React.FC = () => {
 
                 {/* QR Code Section */}
                 <div className="text-center mt-6">
-                  <QRCode url={`https://www.lottog.shop/officelottery/${lotteries[0].id}`} />
-                  {/* <QRCode url={`http://localhost:3000/officelottery/${lotteries[0].id}`} /> */}
+                <QRCode url={`https://www.lottog.shop/officelottery/${response.data.data[(response.data.data.length)-1]._id}`} />
+                {/* <QRCode url={`http://localhost:3000/officelottery/${response.data.data[(response.data.data.length)-1]._id}`} /> */}
 
                   <p className="text-sm text-gray-500 mt-2">
                     Scan this QR code for more details

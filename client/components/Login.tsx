@@ -12,7 +12,7 @@ import { getAllOrders } from "../utils/API/settingorder";
 // import * as authactions from "../redux/action/authactions";
 const LoginPage: React.FC = () => {
   const ID = useSelector((state: RootState) => state.retailer.id) || "Admin";
-  const [countryCode, setCountryCode] = useState<string>("+1"); // Default country code
+  const [countryCode, setCountryCode] = useState<string>("+91");
   const [mainNumber, setMainNumber] = useState<string>("");
   const [verificationCode, setVerificationCode] = useState<string>("");
   const [message, setMessage] = useState<string | null>(null);
@@ -21,7 +21,7 @@ const LoginPage: React.FC = () => {
   console.log(isLogin);
   const dispatch = useDispatch();
 
-  const phoneNumber = `${countryCode}${mainNumber}`; // Combine the country code and main number
+  const phoneNumber = `${countryCode}${mainNumber}`; 
 
   useEffect(() => {
     let interval: NodeJS.Timeout;

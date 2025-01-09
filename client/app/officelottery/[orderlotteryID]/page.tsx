@@ -24,6 +24,7 @@ interface Lottery {
 
 // API Order interface (from the API response)
 interface Order {
+  _id: string;
   orderDate: string;
   totalAmount: number;
   orders: Lottery[];
@@ -55,7 +56,7 @@ const TicketDetails = () => {
         );
 
         const orders = response.data.data.filter(order => 
-          order.orders.some(lottery => lottery.id === orderlotteryID)
+          order._id===orderlotteryID
         );
         console.log(orders);
         setOrder(orders[0]);

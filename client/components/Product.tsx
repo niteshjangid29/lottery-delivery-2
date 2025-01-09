@@ -176,8 +176,9 @@ const LotteryTicket=() => {
       );
     }, 0);
     console.log(newLottery);
+    let response;
     if(isRetailer) {
-      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/userOrder`, {orders:newLottery,totalAmount,orderDate:new Date().toISOString(),phone});
+      response=await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/userOrder`, {orders:newLottery,totalAmount,orderDate:new Date().toISOString(),phone});
       await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/retailerOrder`, {orders:newLottery,totalAmount,orderDate:new Date().toISOString(),phone,ID});
       await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/updatelotteries`, {lotteries:newLottery,ID:ID});
       try {
@@ -204,7 +205,7 @@ const LotteryTicket=() => {
       } 
     }
     else{
-      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/userOrder`, {orders:newLottery,totalAmount,orderDate:new Date().toISOString(),phone});
+     response=await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/userOrder`, {orders:newLottery,totalAmount,orderDate:new Date().toISOString(),phone});
       await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/updatelotteries`, {lotteries:newLottery,ID:"Admin"});
     }
     dispatch({
@@ -218,6 +219,7 @@ const LotteryTicket=() => {
     alert("Ordered Successfully");
     if (deliveryOption === "office") 
       {
+      console.log("Office Delivery",response.data.data);
       const certificate = document.createElement('div');
       certificate.style.width = '595px';
       certificate.style.padding = '5px';
@@ -325,8 +327,9 @@ const LotteryTicket=() => {
 
           {/* QR Code Section */}
           <div className="text-center mt-6">
-            <QRCode url={`https://www.lottog.shop/officelottery/${newLottery[0].id}`} />
-            {/* <QRCode url={`http://localhost:3000/officelottery/${newLottery[0].id}`} /> */}
+            <QRCode url={`https://www.lottog.shop/officelottery/${response.data.data[(response.data.data.length)-1]._id}`} />
+
+            {/* <QRCode url={`http://localhost:3000/officelottery/${response.data.data[(response.data.data.length)-1]._id}`} /> */}
 
             <p className="text-sm text-gray-500 mt-2">
               Scan this QR code for more details
