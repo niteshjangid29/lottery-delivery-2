@@ -9,6 +9,7 @@ import { RootState,store } from "../redux/store";
 import { FaArrowCircleLeft } from "react-icons/fa";
 import { getallcart } from "../utils/API/settingcart";
 import { getAllOrders } from "../utils/API/settingorder";
+import { notify } from "../utils/notify";
 // import * as authactions from "../redux/action/authactions";
 const LoginPage: React.FC = () => {
   const ID = useSelector((state: RootState) => state.retailer.id) || "Admin";
@@ -56,7 +57,7 @@ const LoginPage: React.FC = () => {
         otp: verificationCode,
       });
       if (response.data.success) {
-        console.log(response.data);
+        notify("Login successful");
         // store.dispatch(authactions.setAccessToken(response.data.AccessToken));
         // store.dispatch(authactions.setRefreshToken(response.data.RefreshToken));
         dispatch(

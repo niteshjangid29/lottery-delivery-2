@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "razorpay": "^2.9.5",
     "react-loader-spinner": "^6.1.6"
   }
 }

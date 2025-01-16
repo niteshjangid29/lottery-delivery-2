@@ -42,7 +42,7 @@ const RetailerCard: React.FC = () => {
     if(isLogin){
       getAllOrders(phoneNumber,id);
       getallcart(phoneNumber,id);
-  }
+    }
   };
 
   useEffect(() => {

@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const otpRoutes = require("./routes/otproutes");
 const lotteryroutes = require("./routes/lotteryroutes");
 const retailerRoutes = require("./routes/retailer");
+const paymentRoutes = require("./routes/paymentroutes");
 const userroutes = require("./routes/user");
 const cookieParser = require("cookie-parser");
 const app = express();
@@ -45,5 +46,5 @@ app.use("/", lotteryroutes);
 app.use("/", userroutes);
 app.use("/", otpRoutes);
 app.use("/", retailerRoutes);
-
+app.use("/", paymentRoutes);
 module.exports = app;

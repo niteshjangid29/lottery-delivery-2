@@ -12,7 +12,9 @@ import { RootState } from "../redux/store";
 import CardButton from "../components/CartButton"
 // export const process.env.NEXT_PUBLIC_BACKEND_LINK = "http://localhost:10000";
 // export const process.env.NEXT_PUBLIC_BACKEND_LINK = "https://lottery-delivery-2-backend.vercel.app"
-
+interface ToastProviderProps {
+  children: React.ReactNode;
+}
 const CenteredLayout = () => {
   const [loading, setLoading] = useState<boolean>(true); // Loading state
   const state = useSelector((state: RootState) => state.location.state);
@@ -57,6 +59,7 @@ const CenteredLayout = () => {
           <CardButton />
           <Footer />
         </div>
+
 
       {/* {isAllowedState ? (
         <div className="bg-white w-full max-w-md mx-auto shadow-lg overflow-y-auto">

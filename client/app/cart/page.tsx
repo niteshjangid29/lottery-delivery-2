@@ -13,7 +13,7 @@ import jsPDF from 'jspdf';
 import QRCode from '../../components/QRCode';
 import html2canvas from "html2canvas";
 import ReactDOM from "react-dom/client";
-
+import { razorpayPayment } from '../../utils/API/payment';
 
 const LotteryList: React.FC = () => {
   const dispatch = useDispatch();
@@ -64,8 +64,14 @@ const LotteryList: React.FC = () => {
   };
 
   const handleOrder = async (deliveryOption: string) => {
-    // if (deliveryOption === "home") {
-    //   console.log(lotteries);
+    
+    const paymentStatus=await razorpayPayment(totalAmount)
+    console.log(paymentStatus);
+    console.log(lotteries);
+    if(paymentStatus==="fail"){
+      console.log("Payment Failed");
+      return;
+    }
     try{
       const response=await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/userOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone});
       await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/userCart`, {updatedCart:{items:[]},phone,ID:"Admin"});
@@ -255,11 +261,11 @@ const LotteryList: React.FC = () => {
         {showModal && (
           <div
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-            onClick={() => setShowModal(false)} // Close modal when clicking outside
+            onClick={() => setShowModal(false)}
           >
             <div
               className="bg-white rounded-lg shadow-lg p-6 w-80"
-              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+              onClick={(e) => e.stopPropagation()} 
             >
               <h2 className="text-lg font-semibold mb-4">Choose Delivery Option</h2>
               <button

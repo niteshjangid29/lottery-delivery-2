@@ -7,7 +7,7 @@ import axios from "axios";
 import { useSelector, useDispatch } from 'react-redux';
 import { MdDelete } from 'react-icons/md';
 import { setUserCart } from "../redux/slice/userSlice";
-// import { process.env.NEXT_PUBLIC_BACKEND_LINK } from "../app/page";
+import {notify} from "../utils/notify";
 import { getRetailerDetails } from "../utils/API/retailerDetails";
 import { getalllotteries } from "../utils/API/filteringlottery";
 import {setRetailerDetails} from "../redux/slice/retailerSlice";
@@ -15,6 +15,8 @@ import jsPDF from 'jspdf';
 import QRCode from "./QRCode";
 import html2canvas from "html2canvas";
 import ReactDOM from "react-dom/client";
+// import RazorpayPayment from "../components/Payment";
+import { razorpayPayment } from "../utils/API/payment";
 type Lottery = {
   _id: string;  
   name: string;
@@ -135,7 +137,7 @@ const LotteryTicket=() => {
     }
 
     dispatch(setUserCart(updatedCart));
-  
+    notify("Item Added to Cart");
     setSelectedTickets([]);
     router.push(isRetailer ? `/${ID}/cart`:"/cart");
     console.log(selectedTickets);
@@ -175,8 +177,14 @@ const LotteryTicket=() => {
         )
       );
     }, 0);
+    const paymentStatus=await razorpayPayment(totalAmount)
+    console.log(paymentStatus);
     console.log(newLottery);
     let response;
+    if(paymentStatus==="fail"){
+      notify("Payment Failed");
+      return;
+    }
     if(isRetailer) {
       response=await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/userOrder`, {orders:newLottery,totalAmount,orderDate:new Date().toISOString(),phone});
       await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/retailerOrder`, {orders:newLottery,totalAmount,orderDate:new Date().toISOString(),phone,ID});
@@ -216,7 +224,7 @@ const LotteryTicket=() => {
         orderDate: new Date().toISOString(),
       },
     });
-    alert("Ordered Successfully");
+    notify("Ordered Successfully");
     if (deliveryOption === "office") 
       {
       console.log("Office Delivery",response.data.data);
@@ -529,6 +537,11 @@ const LotteryTicket=() => {
           Buy Now for ₹
           {(Number(currLottery[0].prize) * selectedTickets.reduce((acc, item) => acc + item.count, 0)).toFixed(2)}
         </button>
+        {/* <RazorpayPayment
+        amount={500} // ₹500
+        onSuccess={handleSuccess}
+        onFailure={handleFailure}
+      /> */}
         <button
           className={`w-full py-2 px-4 rounded-md shadow-md ${
             selectedTickets.length > 0

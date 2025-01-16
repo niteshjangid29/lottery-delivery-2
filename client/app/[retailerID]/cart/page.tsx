@@ -10,13 +10,14 @@ import axios from 'axios';
 import jsPDF from 'jspdf';
 import QRCode from '../../../components/QRCode';
 import ReactDOM from "react-dom/client";
-
+import { razorpayPayment } from '../../../utils/API/payment';
 // import { process.env.NEXT_PUBLIC_BACKEND_LINK } from '../../page';
 import { useRouter } from 'next/navigation';
 import { getRetailerDetails } from "../../../utils/API/retailerDetails";
 import { getalllotteries } from "../../../utils/API/filteringlottery";
 import { setRetailerDetails } from '../../../redux/slice/retailerSlice';
 import html2canvas from "html2canvas";
+import { notify } from '../../../utils/notify';
 
 const LotteryList: React.FC = () => {
   const ID = useSelector((state: RootState) => state.retailer.id);
@@ -47,6 +48,7 @@ const LotteryList: React.FC = () => {
 
   const handleDelete = async(lotteryId: string, ticketName: string) => {
     console.log(lotteryId, ticketName);
+    notify("Lottery Deleted")
     dispatch({
       type: 'cart/removeTicket',
       payload: { lotteryId, ticketName },
@@ -71,6 +73,12 @@ const LotteryList: React.FC = () => {
   };
 
   const handleOrder = async(deliveryOption: string) => {
+    const paymentStatus=await razorpayPayment(totalAmount)
+    console.log(paymentStatus);
+    if(paymentStatus==="fail"){
+      notify("Payment Failed");
+      return;
+    }
     console.log(lotteries);
     try{
       const response=await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_LINK}/userOrder`, {orders:lotteries,totalAmount,orderDate:new Date().toISOString(),phone});
@@ -89,7 +97,7 @@ const LotteryList: React.FC = () => {
       dispatch({
         type: 'cart/clearCart',
       });
-      alert("Ordered Successfully");
+      notify("Ordered Successfully");
       if (deliveryOption === "office") 
             {
             const certificate = document.createElement('div');
